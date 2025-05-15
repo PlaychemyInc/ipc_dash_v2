@@ -1,14 +1,18 @@
 import createMainMenu from './scenes/MainMenu';
 import createGameScene from './scenes/GameScene';
 import createLoadingScene from './scenes/LoadingScene';
+import TransitionOverlay from './TransitionOverlay';
 
 export default class SceneManager {
   constructor(app) {
     this.app = app;
     this.currentScene = null;
+    this.transition = new TransitionOverlay(app, { duration: 500 });
   }
 
   async changeScene(sceneName) {
+    await this.transition.fadeOut();
+
     if (this.currentScene) {
       this.app.stage.removeChild(this.currentScene);
       this.currentScene.destroy({ children: true });
@@ -19,6 +23,7 @@ export default class SceneManager {
       game: [
         { alias: 'player', src: 'assets/player.png' },
         { alias: 'enemy', src: 'assets/enemy.png' },
+        { alias: 'input', src: 'assets/input.png' },
       ],
     };
 
@@ -30,6 +35,7 @@ export default class SceneManager {
       }
 
       this.app.stage.addChild(this.currentScene);
+      await this.transition.fadeIn();
     });
   }
 }

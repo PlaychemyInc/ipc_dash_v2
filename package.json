@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@pixi/ui": "^2.2.4",
     "next": "15.3.2",
     "pixi.js": "^8.9.2",
     "react": "^19.0.0",

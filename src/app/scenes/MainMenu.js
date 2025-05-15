@@ -3,9 +3,13 @@ import { Container, Text } from 'pixi.js';
 export default function createMainMenu(app, switchScene) {
   const scene = new Container();
 
-  const title = new Text('🎮 Main Menu - Click to Start', {
+  const style = {
     fill: 0xffffff,
     fontSize: 32,
+  };
+  const title = new Text({
+    text: 'IPC Dash - Click to Start',
+    style
   });
   title.anchor.set(0.5);
   title.x = app.screen.width / 2;
