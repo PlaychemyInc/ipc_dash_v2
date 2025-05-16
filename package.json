@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@pixi/app": "^7.4.3",
+    "@pixi/assets": "^7.4.3",
+    "@pixi/canvas-renderer": "^7.4.3",
+    "@pixi/core": "^7.4.3",
+    "@pixi/devtools": "^2.0.1",
     "@pixi/ui": "^2.2.4",
     "next": "15.3.2",
     "pixi.js": "^8.9.2",

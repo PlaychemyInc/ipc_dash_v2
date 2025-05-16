@@ -1,5 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js';
 import BasicButton from './BasicButton';
+import InputLabel from './InputLabel';
+
 
 export default class BasicPopup extends Container {
   constructor(app, message, onClose = () => {}) {
@@ -29,7 +31,16 @@ export default class BasicPopup extends Container {
     text.y = box.y + 40;
     this.addChild(text);
 
-    const closeBtn = new BasicButton('Close', 100, 40, () => {
+    const input = new InputLabel({
+        label: '',
+        placeholder: 'IPC ID',
+        x: 200,
+        y: 200,
+    });
+    this.addChild(input);
+
+    const closeBtn = new BasicButton('Add', 100, 40, () => {
+      console.log(input.getValue());
       this.parent.removeChild(this);
       onClose();
     });

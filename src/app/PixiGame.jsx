@@ -1,34 +1,50 @@
 'use client'
 
-import { useEffect, useRef } from 'react';
-import { Application } from 'pixi.js';
+import { useEffect, useRef, Component, createRef } from 'react';
+import { Application, Assets, Sprite } from 'pixi.js';
+import { initDevtools } from '@pixi/devtools';
 
 import SceneManager from './SceneManager';
 
-export default function PixiGame() {
-    const pixiContainer = useRef(null);
+export default class PixiGame extends Component {
+    constructor() {
+        super();
+        this.pixiContainer = createRef();
+        this.app = null;
+        this.assets = null;
 
-    useEffect(() => {
-        let app;
+    }
+    render() {
+        return <div ref={this.pixiContainer} />;
+    }
+    async componentDidMount() {
+        // Wait for the app to be created
+        var app = await this.createApp();
+        this.app = app;
+        initDevtools({ app });
 
-        (async () => {
-            // Create the application
-            const app = new Application();
+        //Add app to HTML DOM
+        this.pixiContainer.current.appendChild(this.app.canvas);
 
-            await app.init({ width: 800, height: 600 });
+        await Assets.init({  manifest: '/manifest.json' });
+        this.assets = Assets;
 
-            pixiContainer.current.appendChild(app.canvas); 
+        this.sceneManager = new SceneManager(this);
+        //Set Scene
+        await this.sceneManager.setScene('init');
 
-            const sceneManager = new SceneManager(app);
-            sceneManager.changeScene('menu');
-        })();
+    }
 
-        return () => {
-            if (app) {
-                app.destroy(true, { children: true });
-            }
-        };
-    }, []);
+    async createApp() {
+        // Create the application
+        const app = new Application();
+        await app.init({
+            resizeTo: window
+           
+        });
 
-    return <div ref={pixiContainer} />;
+        
+
+        return app;
+    }
 }
