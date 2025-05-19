@@ -42,7 +42,7 @@ export default class InputLabel extends Container {
   }
 
   getValue() {
-    return this.input.text;
+    return this.input.value;
   }
 
   setValue(val) {

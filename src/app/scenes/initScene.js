@@ -20,8 +20,8 @@ export default class initScene extends BasicScene {
       style
     });
     title.anchor.set(0.5);
-    title.x = this.app.screen.width / 2;
-    title.y = this.app.screen.height / 2;
+    title.x = this.game.app.screen.width / 2;
+    title.y = this.game.app.screen.height / 2;
     title.eventMode = 'static';
     title.cursor = 'pointer';
 

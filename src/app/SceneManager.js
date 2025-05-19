@@ -36,6 +36,10 @@ export default class SceneManager {
     return this.currentScene;
   }
 
+  updateScreenSize(){
+    this.currentScene.updateScreenSize();
+  }
+
 }
 
 

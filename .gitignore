@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#ipc sprites
+public/assets/IPCSpriteSheets/*
+public/assets/IPCSpriteSheets/1.png

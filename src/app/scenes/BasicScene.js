@@ -3,10 +3,9 @@ import { Container } from 'pixi.js';
 export default class BasicScene {
   constructor(game, key) {
     this.game = game;
-    this.app = game.app;
     this.key = key;
     this.scene = new Container();
-    this.app.stage.addChild(this.scene);
+    this.game.app.stage.addChild(this.scene);
 
     this.load().then(this.onLoadComplete.bind(this));
     
@@ -27,6 +26,18 @@ export default class BasicScene {
 
   setScene(key){
     this.game.sceneManager.setScene(key);
+  }
+
+  getScreenWidth(){
+    return this.game.app.screen.width;
+  }
+
+  getScreenHeight(){
+    return this.game.app.screen.height;
+  }
+
+  updateScreenSize(){
+    
   }
 
 

@@ -18,6 +18,9 @@ export default class PixiGame extends Component {
         return <div ref={this.pixiContainer} />;
     }
     async componentDidMount() {
+        //listen for window resize
+        window.addEventListener("resize", this.handleResize);
+
         // Wait for the app to be created
         var app = await this.createApp();
         this.app = app;
@@ -26,7 +29,7 @@ export default class PixiGame extends Component {
         //Add app to HTML DOM
         this.pixiContainer.current.appendChild(this.app.canvas);
 
-        await Assets.init({  manifest: '/manifest.json' });
+        await Assets.init({ manifest: '/manifest.json' });
         this.assets = Assets;
 
         this.sceneManager = new SceneManager(this);
@@ -40,11 +43,16 @@ export default class PixiGame extends Component {
         const app = new Application();
         await app.init({
             resizeTo: window
-           
+
         });
 
-        
+
 
         return app;
+    }
+
+    handleResize = () => {
+        // this.app.renderer.resize(window.innerWidth, window.innerHeight);
+        this.sceneManager.updateScreenSize();
     }
 }
