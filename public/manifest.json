@@ -3,7 +3,6 @@
         {
             "name": "init-scene",
             "assets": [
-                { "alias": "player", "src": "assets/player.png" }
             ]
         },
         {
@@ -15,7 +14,8 @@
                 { "alias": "topItems", "src": "assets/map/topItems.png" },
                 { "alias": "trees", "src": "assets/map/trees.png" },
                 { "alias": "water", "src": "assets/map/water.png" },
-                { "alias": "input", "src": "assets/input.png" }
+                { "alias": "input", "src": "assets/input.png" },
+                { "alias": "portal", "src": "assets/Portal.png" }
             ]
         }
     ]

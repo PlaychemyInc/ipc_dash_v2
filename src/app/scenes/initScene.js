@@ -1,5 +1,5 @@
 import { Text } from 'pixi.js';
-import BasicScene from './BasicScene'
+import BasicScene from './BasicScene';
 
 export default class initScene extends BasicScene {
   constructor(game) {
