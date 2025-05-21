@@ -1,19 +1,20 @@
 // import { Container, Text } from 'pixi.js';
-// import BasicButton from '../components/BasicButton';
 import BasicPopup from '../components/BasicPopup';
 import { AnimatedSprite, Spritesheet, Graphics, Assets, Texture, Container } from 'pixi.js';
-import { Button } from '@pixi/ui';
+import { FancyButton } from '@pixi/ui';
 
 import { Text, Sprite } from 'pixi.js';
 import BasicScene from './BasicScene'
+import IPC from '../components/IPC';
 
 const ipcSpriteSheetPath = 'assets/IpcSpriteSheet.json';
 const ipcSpritesPath = 'assets/IPCSpriteSheets/';
 
+
 export default class gameScene extends BasicScene {
     constructor(game) {
         super(game, 'game-scene');
-        this.ipcStartPosition = {x:100, y:600};
+        this.ipcStartPosition = { x: 100, y: 600 };
     }
 
     onLoadComplete() {
@@ -23,7 +24,7 @@ export default class gameScene extends BasicScene {
         this.uiLayer.visible = false;
         this.game.app.stage.addChild(this.uiLayer); // Add after world to render on top
 
-        this.addText();
+        // this.addText();
         this.addbackground();
 
         this.popup = new BasicPopup(this.game.app, "Add your IPC", this.addIPCtoScene.bind(this));
@@ -32,48 +33,97 @@ export default class gameScene extends BasicScene {
 
         this.addUIbutton();
 
+        this.addPortal();
+
+        this.loadIpcJson();
+
     }
 
+    async loadIpcJson() {
+        // Load the JSON as raw data
+        const response = await fetch(ipcSpriteSheetPath);
+        this.ipcSheetData = await response.json();
+    }
+
+    async addPortal() {
+        const sheet = await Assets.load('assets/PortalSpriteSheet.json');
+        this.portal = new AnimatedSprite(sheet.animations['portal']);
+        this.add(this.portal);
+        this.portal.visible = false;
+        // this.portal.speed = 0.1;
+        this.portal.anchor.set(0.5);
+        this.portal.scale.set(0.5);
+    }
+
+    async startPortal() {
+        if (this.portal) {
+            this.portal.x = this.ipcStartPosition.x;
+            this.portal.y = this.ipcStartPosition.y;
+            this.portal.visible = true;
+            this.portal.play();
+        }
+    }
+
+    stopPortal() {
+        if (this.portal) {
+            this.portal.visible = false;
+            this.portal.stop();
+        }
+    }
+
+    ipcLoaded(ipcSprite) {
+        this.stopPortal();
+        this.add(ipcSprite);
+    }
 
     async addIPCtoScene(ipc_id) {
-        
+
         this.popup.visible = false;
         this.uiLayer.visible = true;
 
+        this.startPortal();
 
-        // Load the JSON as raw data
-        const response = await fetch(ipcSpriteSheetPath);
-        const sheetData = await response.json();
 
-        // Step 2: Load your alternate image (according to gameData)
-        const imagePath = ipcSpritesPath + ipc_id + '.png';
-        sheetData.meta.image = imagePath;
-
-        await Assets.load(imagePath);
-
-        // Step 3: Create your own spritesheet
-        const spritesheet = new Spritesheet(Texture.from(sheetData.meta.image), sheetData);
-
-        // Step 4: Parse it (builds textures)
-        await spritesheet.parse();
-
-        const scaling = 0.5;
-
-        // Create a  AnimatedSprite
-        const animatedSprite = new AnimatedSprite(spritesheet.animations.ipc);
-
-        animatedSprite.anchor.set(0.5);
-        animatedSprite.scale.set(scaling);
-        animatedSprite.animationSpeed = 0.5;
-        animatedSprite.x = this.ipcStartPosition.x;
-        animatedSprite.y = this.ipcStartPosition.y;
+        var newIPC = new IPC(this, ipc_id, this.ipcStartPosition.x, this.ipcStartPosition.y, this.ipcLoaded.bind(this));
+        // this.add(newIPC);
         this.ipcStartPosition.y += 130;
 
-        //fix cameraZoom
-        this.ensureFitsScreen(this.ipcStartPosition.y);
+        if (0) {
 
-        animatedSprite.play();
-        this.add(animatedSprite);
+            // Load the JSON as raw data
+            const response = await fetch(ipcSpriteSheetPath);
+            const sheetData = await response.json();
+
+            // Step 2: Load your alternate image (according to gameData)
+            const imagePath = ipcSpritesPath + ipc_id + '.png';
+            sheetData.meta.image = imagePath;
+
+            await Assets.load(imagePath);
+
+            // Step 3: Create your own spritesheet
+            const spritesheet = new Spritesheet(Texture.from(sheetData.meta.image), sheetData);
+
+            // Step 4: Parse it (builds textures)
+            await spritesheet.parse();
+
+            const scaling = 0.5;
+
+            // Create a  AnimatedSprite
+            const animatedSprite = new AnimatedSprite(spritesheet.animations.ipc);
+
+            animatedSprite.anchor.set(0.5);
+            animatedSprite.scale.set(scaling);
+            animatedSprite.animationSpeed = 0.5;
+            animatedSprite.x = this.ipcStartPosition.x;
+            animatedSprite.y = this.ipcStartPosition.y;
+            this.ipcStartPosition.y += 130;
+
+            //fix cameraZoom
+            this.ensureFitsScreen(this.ipcStartPosition.y);
+
+            animatedSprite.play();
+            this.add(animatedSprite);
+        }
     }
 
     updateScreenSize() {
@@ -120,42 +170,43 @@ export default class gameScene extends BasicScene {
 
     addUIbutton() {
 
-        var padding = { x: 10, y: 10 };
-        
-        const style = { fill: 0x000000, fontSize: 32, };
-        const title = new Text({ text: 'Add IPC', style });
-        title.x = this.getScreenWidth() - title.width - padding.x - padding.x;
-        title.y =  2*padding.y;
+        this.addIPCButton = new FancyButton({
+            defaultView: Sprite.from(this.assets['button']),
+            hoverView: Sprite.from(this.assets['button_hover']),
+            pressedView: Sprite.from(this.assets['button_pressed']),
+            text: 'Add IPC',
+            animations: {
+                hover: {
+                    props: { scale: { x: 1.02, y: 1.02, } },
+                    duration: 100,
+                },
+                pressed: {
+                    props: { scale: { x: 1, y: 1, } },
+                    duration: 100,
+                }
+            }
+        });
 
+        this.addIPCButton.x = this.getScreenWidth() - this.addIPCButton.width - 10;
+        this.addIPCButton.y = 10;//this.addIPCButton.height/2;
 
-        var width = title.width + (2*padding.x);
-        var height = 50;
-        const button = new Button(
-            new Graphics()
-                .rect( this.getScreenWidth() - width - padding.x ,0 + padding.y,width, height, 15)
-                .fill(0xFFFFFF)
-        );
-        button.onPress.connect(this.showPopup.bind(this));
-        
-        this.uiLayer.addChild(button.view);
-        this.uiLayer.addChild(title)
+        this.addIPCButton.onPress.connect(this.showPopup.bind(this));
+
+        this.uiLayer.addChild(this.addIPCButton);
     }
 
-    showPopup(){
+    showPopup() {
         this.popup.visible = true;
         this.uiLayer.visible = false;
     }
 
     ensureFitsScreen(y) {
-    if (y > this.getScreenHeight()) {
-        // Calculate scale factor to fit y into screen height
-        // scale = screenHeight / y  (scale down so y fits exactly)
-        const scaleFactor = this.getScreenHeight() / y;
-        // Apply uniform scale to zoom out
-        this.scene.scale.set(scaleFactor);
-        // Optionally, you might want to reposition container too
-        // For example, keep container at top-left (0,0)
-        this.scene.position.set(0, 0);
-    } 
-}
+        if (y > this.getScreenHeight()) {
+            // Calculate scale factor to fit y into screen height
+            const scaleFactor = this.getScreenHeight() / y; // scale = screenHeight / y  (scale down so y fits exactly)
+            this.scene.scale.set(scaleFactor);
+            // Optionally, you might want to reposition container too
+            this.scene.position.set(0, 0);
+        }
+    }
 }
