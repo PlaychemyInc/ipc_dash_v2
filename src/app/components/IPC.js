@@ -1,4 +1,4 @@
-import { Spritesheet, Assets, Texture, AnimatedSprite } from 'pixi.js';
+import { Spritesheet, Assets, Texture, AnimatedSprite, Ticker } from 'pixi.js';
 
 export default class IPC {
     #ipcID;
@@ -14,6 +14,8 @@ export default class IPC {
         this.y = y;
 
         this.getIPCdata();
+
+        return this;
 
 
     }
@@ -46,6 +48,7 @@ export default class IPC {
         animatedSprite.y = this.y;
 
         animatedSprite.play();
+        this.sprite = animatedSprite;
         this.callback(animatedSprite);
 
     }
@@ -54,6 +57,30 @@ export default class IPC {
         traits.forEach(trait => {
             this.#attribute[trait.trait_type] = trait.value;
         });
+    }
+
+
+    startRace() {
+        const finalX = 3904;
+        const speed = this.getSpeed()/10;
+        const sprite = this.sprite;
+        const moveIPC = (delta) => {
+            // Move sprite only if it hasn't reached or passed the target
+            if (sprite.x < finalX) {
+                sprite.x += speed;
+
+                // Clamp if it overshoots
+                if (sprite.x > finalX) {
+                    sprite.x = targetX;
+                }
+            } else {
+                // Stop the ticker function once the sprite reaches the target
+                Ticker.shared.remove(moveIPC);
+            }
+        };
+
+        // Start the movement
+        Ticker.shared.add(moveIPC);
     }
 
     getID() { return this.#ipcID };

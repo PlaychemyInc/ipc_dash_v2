@@ -141,13 +141,14 @@ export default class gameScene extends BasicScene {
         this.startRaceButton.x = this.getScreenWidth() - this.startRaceButton.width - 10;
         this.startRaceButton.y = 10;//this.addIPCButton.height/2;
 
-        // this.addIPCButton.onPress.connect(this.showPopup.bind(this));
+        this.startRaceButton.onPress.connect(this.startRace.bind(this));
 
         this.uiLayer.addChild(this.startRaceButton);
 
+    }
 
-
-
+    startRace() {
+        this.ipcManager.startRace();
     }
 
     showPopup() {

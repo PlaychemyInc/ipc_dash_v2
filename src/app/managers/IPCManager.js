@@ -19,7 +19,7 @@ export default class IPCManager {
         this.ipcSheetData = await response.json();
     }
 
-    async loadPortalAssets(){
+    async loadPortalAssets() {
         const sheet = await Assets.load('assets/PortalSpriteSheet.json');
         this.portal = new AnimatedSprite(sheet.animations['portal']);
 
@@ -28,7 +28,7 @@ export default class IPCManager {
         this.portal.anchor.set(0.5);
         this.portal.scale.set(0.5);
 
-        this.scene.add(this.portal); 
+        this.scene.add(this.portal);
     }
 
     async addIPC(ipc_id, callback) {
@@ -50,10 +50,10 @@ export default class IPCManager {
         var newIPC = new IPC(spritesheet, ipc_id, this.ipcStart.x, this.ipcStart.y, this.onSpriteLoaded.bind(this));
         this.ipcArray.push(newIPC);
         this.ipcStart.y += 130;
-        
+
     }
 
-    startPortal(){
+    startPortal() {
         this.portal.x = this.ipcStart.x;
         this.portal.y = this.ipcStart.y;
         this.portal.visible = true;
@@ -65,7 +65,7 @@ export default class IPCManager {
         this.portal.stop();
     }
 
-    onSpriteLoaded(ipcSprite){
+    onSpriteLoaded(ipcSprite) {
         this.stopPortal();
 
         this.scene.add(ipcSprite);
@@ -77,5 +77,11 @@ export default class IPCManager {
 
     getNextIpcPos() {
         return this.ipcStart;
+    }
+
+    startRace() {
+        for (const index in this.ipcArray) {
+            this.ipcArray[index].startRace();
+        }
     }
 }
