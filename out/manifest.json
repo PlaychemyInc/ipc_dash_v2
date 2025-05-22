@@ -1,0 +1,25 @@
+{
+    "bundles": [
+        {
+            "name": "init-scene",
+            "assets": [
+            ]
+        },
+        {
+            "name": "game-scene",
+            "assets": [
+                { "alias": "grass", "src": "assets/map/grass.png" },
+                { "alias": "mountains", "src": "assets/map/mountains.png" },
+                { "alias": "sky", "src": "assets/map/sky.png" },
+                { "alias": "topItems", "src": "assets/map/topItems.png" },
+                { "alias": "trees", "src": "assets/map/trees.png" },
+                { "alias": "water", "src": "assets/map/water.png" },
+                { "alias": "input", "src": "assets/input.png" },
+                { "alias": "portal", "src": "assets/Portal.png" },
+                { "alias": "button", "src": "assets/UI/button.png" },
+                { "alias": "button_hover", "src": "assets/UI/button_hover.png" },
+                { "alias": "button_pressed", "src": "assets/UI/button_pressed.png" }
+            ]
+        }
+    ]
+}
