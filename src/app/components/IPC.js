@@ -32,6 +32,9 @@ export default class IPC {
         this.loadSprite();
 
         this.setIPCprops(data.traits);
+
+        this.sprite.animationSpeed = this.getSpeed() / 5;
+
     }
 
     async loadSprite() {
@@ -43,7 +46,7 @@ export default class IPC {
 
         animatedSprite.anchor.set(0.5);
         animatedSprite.scale.set(scaling);
-        animatedSprite.animationSpeed = 0.5;
+
         animatedSprite.x = this.x;
         animatedSprite.y = this.y;
 
@@ -61,10 +64,37 @@ export default class IPC {
 
 
     startRace() {
-        const finalX = 3904;
-        const speed = this.getSpeed()/10;
         const ipc = this;
-        const sprite = this.sprite;
+
+        const jumpHeight = this.sprite.height/2;
+        const velocityY = 2;
+        const groundY = this.sprite.y;
+        const maxY = this.sprite.y - jumpHeight;
+
+        var up = true;
+        console.log(this.x);
+        console.log(groundY);
+        console.log(maxY);
+        function ipcCelebrate() {
+            if (ipc.sprite.y >= maxY && up) {
+                ipc.sprite.y -= velocityY;
+                if(ipc.sprite.y <= maxY){
+                    up = false;
+                    ipc.sprite.gotoAndStop(0);
+                }
+            }
+
+            if (ipc.sprite.y <= groundY && !up) {
+                ipc.sprite.y += velocityY;
+                if(ipc.sprite.y >= groundY){
+                    up = true;
+                    ipc.sprite.gotoAndStop(7);
+                }
+            }
+        }
+
+        const finalX = 3914;
+        const speed = this.getSpeed() / 5;
         const moveIPC = (delta) => {
             // Move sprite only if it hasn't reached or passed the target
             if (ipc.sprite.x < finalX) {
@@ -78,7 +108,10 @@ export default class IPC {
                 }
             } else {
                 // Stop the ticker function once the sprite reaches the target
+                ipc.sprite.stop();
                 Ticker.shared.remove(moveIPC);
+
+                Ticker.shared.add(ipcCelebrate);
             }
         };
 

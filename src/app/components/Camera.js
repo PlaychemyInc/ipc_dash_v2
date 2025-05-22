@@ -15,8 +15,8 @@ export default class Camera {
         const followIPC = (delta) => {
             // 
             if (fastestIPC.x + fastestIPC.sprite.width >=  maxWidth) {
-                speed = fastestIPC.getSpeed()/10;
-                console.log(speed);
+                speed = fastestIPC.getSpeed()/5;
+                // console.log(speed);
             }
 
             if (this.camera.pivot.x + maxWidth < finalX) {
