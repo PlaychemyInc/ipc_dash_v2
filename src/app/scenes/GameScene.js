@@ -11,8 +11,7 @@ import IPCManager from '../managers/IPCManager.js';
 export default class gameScene extends BasicScene {
     constructor(game) {
         super(game, 'game-scene');
-        this.ipcManager = new IPCManager({ x: 100, y: 600 });
-        this.ipcStartPosition = { x: 100, y: 600 };
+        
     }
 
     onLoadComplete() {
@@ -25,57 +24,25 @@ export default class gameScene extends BasicScene {
         // this.addText();
         this.addbackground();
 
+        //Managers
+        this.ipcManager = new IPCManager(this, { x: 100, y: 600 });
+
         this.popup = new BasicPopup(this.game.app, "Add your IPC", this.addIPCtoScene.bind(this));
         this.add(this.popup);
         this.popup.zIndex = 1000;
 
         this.addUIbutton();
 
-        this.addPortal();
-
-        
-
-    }
-
-
-
-    async addPortal() {
-        const sheet = await Assets.load('assets/PortalSpriteSheet.json');
-        this.portal = new AnimatedSprite(sheet.animations['portal']);
-        this.add(this.portal);
-        this.portal.visible = false;
-        // this.portal.speed = 0.1;
-        this.portal.anchor.set(0.5);
-        this.portal.scale.set(0.5);
-    }
-
-    async startPortal() {
-        if (this.portal) {
-            this.portal.x = this.ipcManager.getNextIpcPos().x;
-            this.portal.y = this.ipcManager.getNextIpcPos().y;
-            this.portal.visible = true;
-            this.portal.play();
-        }
-    }
-
-    stopPortal() {
-        if (this.portal) {
-            this.portal.visible = false;
-            this.portal.stop();
-        }
     }
 
     ipcLoaded(ipcSprite) {
-        this.stopPortal();
-        this.add(ipcSprite);
+
     }
 
     async addIPCtoScene(ipc_id) {
 
         this.popup.visible = false;
         this.uiLayer.visible = true;
-
-        this.startPortal();
 
         this.ipcManager.addIPC(ipc_id, this.ipcLoaded.bind(this));
 
