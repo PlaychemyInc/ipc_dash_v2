@@ -3,9 +3,9 @@ import { Spritesheet, Assets, Texture, AnimatedSprite } from 'pixi.js';
 export default class IPC {
     #ipcID;
     #attribute;
-    constructor(scene, ipc_id, x, y, callback) {
+    constructor(spritesheet, ipc_id, x, y, callback) {
 
-        this.scene = scene;
+        this.spritesheet = spritesheet;
 
         this.#ipcID = ipc_id;
         this.#attribute = {};
@@ -27,28 +27,17 @@ export default class IPC {
 
         this.description = data.description;
 
-        this.imageURL = 'assets/IPCSpriteSheets/' + this.#ipcID + '.png';
         this.loadSprite();
 
         this.setIPCprops(data.traits);
     }
 
     async loadSprite() {
-        // Step 2: Load your alternate image (according to gameData)
-        this.scene.ipcSheetData.meta.image = this.imageURL;
-
-        await Assets.load(this.imageURL);
-
-        // Step 3: Create your own spritesheet
-        const spritesheet = new Spritesheet(Texture.from(this.imageURL), this.scene.ipcSheetData);
-
-        // Step 4: Parse it (builds textures)
-        await spritesheet.parse();
 
         const scaling = 0.5;
 
         // Create a  AnimatedSprite
-        const animatedSprite = new AnimatedSprite(spritesheet.animations.ipc);
+        const animatedSprite = new AnimatedSprite(this.spritesheet.animations.ipc);
 
         animatedSprite.anchor.set(0.5);
         animatedSprite.scale.set(scaling);
