@@ -37,7 +37,10 @@ export default class IPCManager {
 
         this.startPortal();
 
-        this.imageURL = 'assets/IPCSpriteSheets/' + ipc_id + '.png';
+        //https://github.com/AnnEsther/ipc_dash_page/blob/main/assets/IPCSpriteSheets/1.png
+        //https://raw.githubusercontent.com/AnnEsther/ipc_dash_page/main/assets/IPCSpriteSheets/1.png
+        this.imageURL = 'https://raw.githubusercontent.com/AnnEsther/ipc_dash_page/main/assets/IPCSpriteSheets/' + ipc_id + '.png';
+        // this.imageURL = 'assets/IPCSpriteSheets/' + ipc_id + '.png';
 
         //Load your alternate image (according to gameData)
         this.ipcSheetData.meta.image = this.imageURL;
