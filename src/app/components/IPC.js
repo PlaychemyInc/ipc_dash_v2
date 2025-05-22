@@ -63,15 +63,18 @@ export default class IPC {
     startRace() {
         const finalX = 3904;
         const speed = this.getSpeed()/10;
+        const ipc = this;
         const sprite = this.sprite;
         const moveIPC = (delta) => {
             // Move sprite only if it hasn't reached or passed the target
-            if (sprite.x < finalX) {
-                sprite.x += speed;
+            if (ipc.sprite.x < finalX) {
+                ipc.sprite.x += speed;
+                ipc.x += speed;
 
                 // Clamp if it overshoots
-                if (sprite.x > finalX) {
-                    sprite.x = targetX;
+                if (ipc.sprite.x > finalX) {
+                    ipc.sprite.x = finalX;
+                    ipc.x = finalX;
                 }
             } else {
                 // Stop the ticker function once the sprite reaches the target

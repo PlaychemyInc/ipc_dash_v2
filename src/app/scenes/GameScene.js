@@ -1,17 +1,18 @@
 // import { Container, Text } from 'pixi.js';
 import BasicPopup from '../components/BasicPopup';
-import { AnimatedSprite, Assets, Container } from 'pixi.js';
+import Camera from '../components/Camera';
+import { AnimatedSprite, Assets, Container, Ticker } from 'pixi.js';
 import { FancyButton } from '@pixi/ui';
 
 import { Text, Sprite } from 'pixi.js';
 import BasicScene from './BasicScene'
 import IPCManager from '../managers/IPCManager.js';
 
-
 export default class gameScene extends BasicScene {
     constructor(game) {
         super(game, 'game-scene');
         
+
     }
 
     onLoadComplete() {
@@ -26,6 +27,8 @@ export default class gameScene extends BasicScene {
 
         //Managers
         this.ipcManager = new IPCManager(this, { x: 100, y: 600 });
+
+        this.camera = new Camera(this);
 
         this.popup = new BasicPopup(this.game.app, "Add your IPC", this.addIPCtoScene.bind(this));
         this.add(this.popup);
@@ -149,6 +152,9 @@ export default class gameScene extends BasicScene {
 
     startRace() {
         this.ipcManager.startRace();
+
+        this.camera.startFollowIPC(this.ipcManager.getFastestIPC(), this.getScreenWidth(), 4096);
+
     }
 
     showPopup() {

@@ -84,4 +84,17 @@ export default class IPCManager {
             this.ipcArray[index].startRace();
         }
     }
+
+    getFastestIPC() {
+
+        let maxX = -Infinity;
+        var fastestIPC;
+        for (const ipc of this.ipcArray) {
+            if(maxX < ipc.x){
+                maxX = ipc.x;
+                fastestIPC = ipc;
+            }
+        }
+        return fastestIPC;
+    }
 }
