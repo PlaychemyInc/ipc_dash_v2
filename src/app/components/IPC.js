@@ -16,8 +16,6 @@ export default class IPC {
         this.getIPCdata();
 
         return this;
-
-
     }
 
     async getIPCdata() {

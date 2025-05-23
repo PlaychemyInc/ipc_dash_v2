@@ -36,7 +36,7 @@ export default class InputLabel extends Container {
       },
       width: 200,
     });
-
+    this.input.cleanOnFocus = true;
     this.input.y = labelText.height + 8;
     this.addChild(this.input);
   }
@@ -47,6 +47,7 @@ export default class InputLabel extends Container {
 
   setValue(val) {
     this.input.text = val;
+    this.input.value = val;
   }
 
   focus() {

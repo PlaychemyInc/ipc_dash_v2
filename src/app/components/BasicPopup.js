@@ -44,6 +44,7 @@ export default class BasicPopup extends Container {
 
     const closeBtn = new BasicButton('Add', 100, 40, () => {
       var addIPC = this.input.getValue();
+      this.input.setValue('');
       // this.parent.removeChild(this);
       onClose(addIPC);
     });
