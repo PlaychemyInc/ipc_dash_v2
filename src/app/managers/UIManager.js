@@ -3,14 +3,14 @@ import BasicPopup from '../components/BasicPopup';
 import { FancyButton } from '@pixi/ui';
 
 
-export default class UILayer {
+export default class UIManager {
     constructor(scene) {
-        this.ui = new Container();
+        this.uiScene = new Container();
         this.scene = scene;
 
         this.buttons = [];
 
-        this.scene.game.app.stage.addChild(this.ui); // Add after world to render on top
+        this.scene.game.app.stage.addChild(this.uiScene); // Add after world to render on top
     }
 
     createButton(x, y, text, onClick) {
@@ -71,6 +71,6 @@ export default class UILayer {
     }
 
     addChild(child) {
-        this.ui.addChild(child);
+        this.uiScene.addChild(child);
     }
 }
