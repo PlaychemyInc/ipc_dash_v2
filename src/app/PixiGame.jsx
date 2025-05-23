@@ -4,7 +4,7 @@ import { useEffect, useRef, Component, createRef } from 'react';
 import { Application, Assets, Sprite } from 'pixi.js';
 import { initDevtools } from '@pixi/devtools';
 
-import SceneManager from './SceneManager';
+import SceneManager from './managers/SceneManager';
 
 export default class PixiGame extends Component {
     constructor() {

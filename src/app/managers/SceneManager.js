@@ -1,7 +1,7 @@
-import initScene from './scenes/initScene';
-import gameScene from './scenes/GameScene';
-import createLoadingScene from './scenes/LoadingScene';
-import TransitionOverlay from './TransitionOverlay';
+import initScene from '../scenes/initScene';
+import gameScene from '../scenes/GameScene';
+import createLoadingScene from '../scenes/LoadingScene';
+import TransitionOverlay from '../components/TransitionOverlay';
 
 export default class SceneManager {
   constructor(game) {

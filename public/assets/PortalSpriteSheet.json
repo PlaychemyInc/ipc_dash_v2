@@ -70,10 +70,7 @@
 		"version": "1.0",
 		"image": "Portal.png",
 		"format": "RGBA8888",
-		"size": {
-			"w": 945,
-			"h": 438
-		},
+		"size": { "w": 945, "h": 438 },
 		"scale": "1"
 	},
 	"animations": {

@@ -18,7 +18,8 @@
                 { "alias": "portal", "src": "assets/Portal.png" },
                 { "alias": "button", "src": "assets/UI/button.png" },
                 { "alias": "button_hover", "src": "assets/UI/button_hover.png" },
-                { "alias": "button_pressed", "src": "assets/UI/button_pressed.png" }
+                { "alias": "button_pressed", "src": "assets/UI/button_pressed.png" },
+                { "alias": "rock", "src": "assets/rockAnim.png" }
             ]
         }
     ]
