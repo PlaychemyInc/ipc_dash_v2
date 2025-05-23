@@ -31,7 +31,7 @@ export default class IPC {
 
         this.setIPCprops(data.traits);
 
-        this.sprite.animationSpeed = this.getSpeed() / 5;
+        this.sprite.animationSpeed = this.getSpeed() / 10;
 
     }
 

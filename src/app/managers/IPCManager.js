@@ -54,6 +54,10 @@ export default class IPCManager {
         this.ipcArray.push(newIPC);
         this.ipcStart.y += 130;
 
+        if(this.ipcStart.y > 4096){
+            this.addIpcButton.visible = false;
+        }
+
     }
 
     startPortal() {

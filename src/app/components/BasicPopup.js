@@ -4,7 +4,7 @@ import InputLabel from './InputLabel';
 
 
 export default class BasicPopup extends Container {
-  constructor(app, message, onClose = () => {}) {
+  constructor(x, y, message, onClose = () => {}) {
     super();
 
     // const overlay = new Graphics()
@@ -20,8 +20,8 @@ export default class BasicPopup extends Container {
       .beginFill(0xffffff)
       .drawRoundedRect(0, 0, 300, 200, 20)
       .endFill();
-    box.x = (app.screen.width - bg_width)/2;
-    box.y = (app.screen.height - bg_height)/2;
+    box.x = x - (bg_width/2);//(app.screen.width - bg_width)/2;
+    box.y = y - (bg_height/2);//(app.screen.height - bg_height)/2;
     this.addChild(box);
 
     const text = new Text(message, {

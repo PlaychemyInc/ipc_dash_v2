@@ -1,8 +1,7 @@
 // import { Container, Text } from 'pixi.js';
-import BasicPopup from '../components/BasicPopup';
 import Camera from '../components/Camera';
-import { AnimatedSprite, Assets, Container, Ticker } from 'pixi.js';
-import { FancyButton } from '@pixi/ui';
+import UILayer from '../components/UILayer';
+import { AnimatedSprite, Assets, Container, PI_2, Ticker } from 'pixi.js';
 
 import { Text, Sprite } from 'pixi.js';
 import BasicScene from './BasicScene'
@@ -16,11 +15,7 @@ export default class gameScene extends BasicScene {
     }
 
     onLoadComplete() {
-
-        //UI layer
-        this.uiLayer = new Container();
-        this.uiLayer.visible = false;
-        this.game.app.stage.addChild(this.uiLayer); // Add after world to render on top
+        
 
         // this.addText();
         this.addbackground();
@@ -30,11 +25,10 @@ export default class gameScene extends BasicScene {
 
         this.camera = new Camera(this);
 
-        this.popup = new BasicPopup(this.game.app, "Add your IPC", this.addIPCtoScene.bind(this));
-        this.add(this.popup);
-        this.popup.zIndex = 1000;
-
-        this.addUIbutton();
+        //UI layer
+        this.uiLayer = new UILayer(this);
+        this.addUIElements();
+        this.uiLayer.hideButtons();
 
     }
 
@@ -44,8 +38,8 @@ export default class gameScene extends BasicScene {
 
     async addIPCtoScene(ipc_id) {
 
-        this.popup.visible = false;
-        this.uiLayer.visible = true;
+        this.uiLayer.hidePopup();
+        this.uiLayer.showButtons();
 
         this.ipcManager.addIPC(ipc_id, this.ipcLoaded.bind(this));
 
@@ -95,71 +89,26 @@ export default class gameScene extends BasicScene {
         this.add(title)
     }
 
-    addUIbutton() {
+    addUIElements() {
+        this.uiLayer.createPopup(this.getScreenWidth()/2, this.getScreenHeight()/2, this.addIPCtoScene.bind(this));
 
-        this.addIPCButton = new FancyButton({
-            defaultView: Sprite.from(this.assets['button']),
-            hoverView: Sprite.from(this.assets['button_hover']),
-            pressedView: Sprite.from(this.assets['button_pressed']),
-            text: 'Add IPC',
-            animations: {
-                hover: {
-                    props: { scale: { x: 1.02, y: 1.02, } },
-                    duration: 100,
-                },
-                pressed: {
-                    props: { scale: { x: 1, y: 1, } },
-                    duration: 100,
-                }
-            }
-        });
+        this.ipcManager.addIpcButton = this.uiLayer.createButton(10, 10, 'Add IPC', this.showPopup.bind(this));
 
-        this.addIPCButton.x = 10;
-        this.addIPCButton.y = 10;//this.addIPCButton.height/2;
-
-        this.addIPCButton.onPress.connect(this.showPopup.bind(this));
-
-        this.uiLayer.addChild(this.addIPCButton);
-
-
-
-
-        this.startRaceButton = new FancyButton({
-            defaultView: Sprite.from(this.assets['button']),
-            hoverView: Sprite.from(this.assets['button_hover']),
-            pressedView: Sprite.from(this.assets['button_pressed']),
-            text: 'Start Race',
-            animations: {
-                hover: {
-                    props: { scale: { x: 1.02, y: 1.02, } },
-                    duration: 100,
-                },
-                pressed: {
-                    props: { scale: { x: 1, y: 1, } },
-                    duration: 100,
-                }
-            }
-        });
-
-        this.startRaceButton.x = this.getScreenWidth() - this.startRaceButton.width - 10;
-        this.startRaceButton.y = 10;//this.addIPCButton.height/2;
-
-        this.startRaceButton.onPress.connect(this.startRace.bind(this));
-
-        this.uiLayer.addChild(this.startRaceButton);
+        var buttonStart = this.uiLayer.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.startRace.bind(this));
+        buttonStart.x -= buttonStart.width;
 
     }
 
     startRace() {
+        this.uiLayer.hideButtons();
         this.ipcManager.startRace();
-
         this.camera.startFollowIPC(this.ipcManager.getFastestIPC(), this.getScreenWidth(), 4096);
-
     }
 
     showPopup() {
-        this.popup.visible = true;
-        this.uiLayer.visible = false;
+        // this.popup.visible = true;
+        this.uiLayer.hideButtons();
+        this.uiLayer.showPopup();
     }
 
     ensureFitsScreen(y) {
@@ -169,6 +118,8 @@ export default class gameScene extends BasicScene {
             this.scene.scale.set(scaleFactor);
             // Optionally, you might want to reposition container too
             this.scene.position.set(0, 0);
+            //fix ui layer
+            this.uiLayer.ui.scale.set(1);
         }
     }
 }
