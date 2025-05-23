@@ -102,7 +102,7 @@ export default class gameScene extends BasicScene {
     startRace() {
         this.uiLayer.hideButtons();
         this.ipcManager.startRace();
-        this.camera.startFollowIPC(this.ipcManager.getFastestIPC(), this.getScreenWidth(), 4096);
+        this.camera.startFollowIPC(this.ipcManager.getFastestIPC(), this.getScreenWidth(), 4096, this.scaleFactor);
     }
 
     showPopup() {
@@ -114,8 +114,8 @@ export default class gameScene extends BasicScene {
     ensureFitsScreen(y) {
         if (y > this.getScreenHeight()) {
             // Calculate scale factor to fit y into screen height
-            const scaleFactor = this.getScreenHeight() / y; // scale = screenHeight / y  (scale down so y fits exactly)
-            this.scene.scale.set(scaleFactor);
+            this.scaleFactor = this.getScreenHeight() / y; // scale = screenHeight / y  (scale down so y fits exactly)
+            this.scene.scale.set(this.scaleFactor);
             // Optionally, you might want to reposition container too
             this.scene.position.set(0, 0);
             //fix ui layer

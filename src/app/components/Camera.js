@@ -7,14 +7,15 @@ export default class Camera {
         this.scene = gameScene;
     }
 
-    startFollowIPC(fastestIPC, maxWidth, finalX){
+    startFollowIPC(fastestIPC, maxWidth, finalX, scaleFactor){
 
         var speed = 0;
+        maxWidth /= scaleFactor;
         // const camera = this.camera;
 
         const followIPC = (delta) => {
             // 
-            if (fastestIPC.x + fastestIPC.sprite.width >=  maxWidth) {
+            if (fastestIPC.x + (fastestIPC.sprite.width/(scaleFactor*2)) >=  maxWidth) {
                 speed = fastestIPC.getSpeed()/5;
                 // console.log(speed);
             }

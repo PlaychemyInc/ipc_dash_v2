@@ -70,9 +70,7 @@ export default class IPC {
         const maxY = this.sprite.y - jumpHeight;
 
         var up = true;
-        console.log(this.x);
-        console.log(groundY);
-        console.log(maxY);
+
         function ipcCelebrate() {
             if (ipc.sprite.y >= maxY && up) {
                 ipc.sprite.y -= velocityY;
