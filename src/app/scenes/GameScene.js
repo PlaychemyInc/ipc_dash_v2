@@ -7,12 +7,12 @@ import { Text, Sprite } from 'pixi.js';
 import BasicScene from './BasicScene'
 import IPCManager from '../managers/IPCManager.js';
 
-import Rock from '../components/Rock';
 import RockManager from '../managers/RockManager';
 
 export default class gameScene extends BasicScene {
     constructor(game) {
         super(game, 'game-scene');
+        this.scaleFactor = 1;
         
 
     }
@@ -24,7 +24,8 @@ export default class gameScene extends BasicScene {
         this.addbackground();
 
         //Managers
-        this.ipcManager = new IPCManager(this, { x: 100, y: 600 });
+        this.rockManager = new RockManager(this);
+        this.ipcManager = new IPCManager(this, { x: 100, y: 600 }, this.rockManager);
 
         this.camera = new Camera(this);
 
@@ -33,8 +34,7 @@ export default class gameScene extends BasicScene {
         this.addUIElements();
         this.uiManager.hideButtons();
 
-        this.rockManager = new RockManager();
-        this.rock = new Rock(this, 100,100);
+        
 
     }
 

@@ -4,9 +4,10 @@ import IPC from '../components/IPC.js';
 const ipcSpriteSheetPath = 'assets/IpcSpriteSheet.json';
 
 export default class IPCManager {
-    constructor(scene, startPos) {
-        this.ipcArray = [];
+    constructor(scene, startPos, rockManager) {
+        this.ipcArray = {};
         this.ipcStart = startPos;
+        this.rockManager = rockManager;
         this.scene = scene;
 
         this.loadPortalAssets();
@@ -51,7 +52,7 @@ export default class IPCManager {
         await spritesheet.parse();
 
         var newIPC = new IPC(spritesheet, ipc_id, this.ipcStart.x, this.ipcStart.y, this.onSpriteLoaded.bind(this));
-        this.ipcArray.push(newIPC);
+        this.ipcArray[ipc_id] = newIPC;
         this.ipcStart.y += 130;
 
         if(this.ipcStart.y > 4096){
@@ -72,10 +73,10 @@ export default class IPCManager {
         this.portal.stop();
     }
 
-    onSpriteLoaded(ipcSprite) {
+    onSpriteLoaded(ipc) {
         this.stopPortal();
-
-        this.scene.add(ipcSprite);
+        this.rockManager.createRocks(ipc);
+        this.scene.add(ipc.sprite);
     }
 
     getMaxHieght() {
@@ -96,12 +97,16 @@ export default class IPCManager {
 
         let maxX = -Infinity;
         var fastestIPC;
-        for (const ipc of this.ipcArray) {
-            if(maxX < ipc.x){
-                maxX = ipc.x;
-                fastestIPC = ipc;
+        for (var ipc_id in this.ipcArray) {
+            if(maxX < this.ipcArray[ipc_id].x){
+                maxX = this.ipcArray[ipc_id].x;
+                fastestIPC = this.ipcArray[ipc_id];
             }
         }
         return fastestIPC;
+    }
+
+    getIPC(ipc_id){
+        return this.ipcArray[ipc_id];
     }
 }

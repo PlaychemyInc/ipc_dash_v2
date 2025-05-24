@@ -50,7 +50,7 @@ export default class IPC {
 
         animatedSprite.play();
         this.sprite = animatedSprite;
-        this.callback(animatedSprite);
+        this.callback(this);
 
     }
 

@@ -17,7 +17,6 @@ export default class Camera {
             // 
             if (fastestIPC.x + (fastestIPC.sprite.width/(scaleFactor*2)) >=  maxWidth) {
                 speed = fastestIPC.getSpeed()/5;
-                // console.log(speed);
             }
 
             if (this.camera.pivot.x + maxWidth < finalX) {

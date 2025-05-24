@@ -2,10 +2,12 @@ import { Assets, AnimatedSprite } from 'pixi.js';
 
 
 export default class Rock {
-    constructor(scene, x, y) {
+    constructor(manager, ipc_id, x, y, callback) {
 
-        this.scene = scene;
+        this.manager = manager;
         this.loadAssets(x, y);
+        this.ipc_id = ipc_id;
+        this.callback = callback;
 
         // this.portal.speed = 0.1;
         // this.portal.visible = false;
@@ -18,13 +20,16 @@ export default class Rock {
 
     async loadAssets(x, y){
         const sheet = await Assets.load('assets/rock.json');
-        this.rock = new AnimatedSprite(sheet.animations['break']);
-        this.rock.x = x;
-        this.rock.y = y;
-        this.scene.add(this.rock);
+        this.sprite = new AnimatedSprite(sheet.animations['break']);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.speed = 0.1;
+        this.sprite.scale.set(2,2);
+        this.callback(this.ipc_id, this.sprite);
+        // this.scene.add(this.rock);
     }
 
     getSprite(){
-        return this.rock;
+        return this.sprite;
     }
 }
