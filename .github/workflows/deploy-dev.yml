@@ -46,7 +46,7 @@ jobs:
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' --data "{
-            \"text\": \"✅ *Build Updated!*\n*Commit:* ${{ github.event.head_commit.message }}\n🔗 <http://ipc-dash.s3-website.us-east-2.amazonaws.com/|View Deployed App>\"
+            \"text\": \"✅ *IPC Dash - Build Updated!*\n*Commit:* ${{ github.event.head_commit.message }}\n🔗 <http://ipc-dash.s3-website.us-east-2.amazonaws.com/|View Deployed App>\"
           }" ${{ secrets.SLACK_WEBHOOK_URL }}
       
       # ❌ Failure message
@@ -54,5 +54,5 @@ jobs:
         if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' --data "{
-            \"text\": \"❌ *Build Failed!*\n*Commit:* ${{ github.event.head_commit.message }}\n👀 Check the GitHub Actions logs.\"
+            \"text\": \"❌ *IPC Dash - Build Failed!*\n*Commit:* ${{ github.event.head_commit.message }}\n👀 Check the GitHub Actions logs.\"
           }" ${{ secrets.SLACK_WEBHOOK_URL }}
