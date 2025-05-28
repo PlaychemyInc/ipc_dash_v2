@@ -1,7 +1,9 @@
 // import { Container, Text } from 'pixi.js';
+import { AnimatedSprite, Assets, Container, PI_2, Ticker } from 'pixi.js';
+
+import { GAME } from '../config'
 import Camera from '../components/Camera';
 import UIManager from '../managers/UIManager';
-import { AnimatedSprite, Assets, Container, PI_2, Ticker } from 'pixi.js';
 
 import { Text, Sprite } from 'pixi.js';
 import BasicScene from './BasicScene'
@@ -13,19 +15,24 @@ export default class gameScene extends BasicScene {
     constructor(game) {
         super(game, 'game-scene');
         this.scaleFactor = 1;
-        
+
 
     }
 
     onLoadComplete() {
-        
+
 
         // this.addText();
         this.addbackground();
 
         //Managers
-        this.rockManager = new RockManager(this);
-        this.ipcManager = new IPCManager(this, { x: 100, y: 600 }, this.rockManager);
+        this.rockManager = GAME.rocks_enabled ? new RockManager(this) : null;
+
+        var ipcManagerConfig = {
+            scene: this,
+            rockManager: this.rockManager
+        };
+        this.ipcManager = new IPCManager(ipcManagerConfig);
 
         this.camera = new Camera(this);
 
@@ -34,7 +41,7 @@ export default class gameScene extends BasicScene {
         this.addUIElements();
         this.uiManager.hideButtons();
 
-        
+
 
     }
 
@@ -96,7 +103,7 @@ export default class gameScene extends BasicScene {
     }
 
     addUIElements() {
-        this.uiManager.createPopup(this.getScreenWidth()/2, this.getScreenHeight()/2, this.addIPCtoScene.bind(this));
+        this.uiManager.createPopup(this.getScreenWidth() / 2, this.getScreenHeight() / 2, this.addIPCtoScene.bind(this));
 
         this.ipcManager.addIpcButton = this.uiManager.createButton(10, 10, 'Add IPC', this.showPopup.bind(this));
 

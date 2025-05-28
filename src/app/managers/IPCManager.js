@@ -1,14 +1,17 @@
 import { Spritesheet, Assets, Texture, AnimatedSprite } from 'pixi.js';
+import {GAME} from '../config'
 import IPC from '../components/IPC.js';
 
 const ipcSpriteSheetPath = 'assets/IpcSpriteSheet.json';
 
 export default class IPCManager {
-    constructor(scene, startPos, rockManager) {
+    constructor(config) {
+
+        this.scene = config.scene;
+        this.rockManager = config.rockManager;
+        
+        this.ipcStart = GAME.ipc_start;
         this.ipcArray = {};
-        this.ipcStart = startPos;
-        this.rockManager = rockManager;
-        this.scene = scene;
 
         this.loadPortalAssets();
         this.loadIpcSpriteJson();
@@ -75,7 +78,9 @@ export default class IPCManager {
 
     onSpriteLoaded(ipc) {
         this.stopPortal();
-        this.rockManager.createRocks(ipc);
+        if(this.rockManager){
+            this.rockManager.createRocks(ipc);
+        }
         this.scene.add(ipc.sprite);
     }
 
