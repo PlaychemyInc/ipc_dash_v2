@@ -1,0 +1,42 @@
+name: Deploy exported Next.js app to S3 (dev branch)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and Export
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Clear S3 bucket before upload
+        run: aws s3 rm s3://$S3_BUCKET_NAME/ --recursive
+        env:
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+
+      - name: Upload exported site to S3
+        run: aws s3 cp ./out s3://$S3_BUCKET_NAME/ --recursive
+        env:
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
