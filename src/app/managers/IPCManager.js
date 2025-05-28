@@ -90,7 +90,7 @@ export default class IPCManager {
         if(this.rockManager){
             this.rockManager.createRocks(ipc);
         }
-        this.scene.add(ipc.sprite);
+        this.scene.add(ipc.displayObject);
     }
 
     getMaxHieght() {

@@ -137,7 +137,7 @@ export default class gameScene extends BasicScene {
             // Optionally, you might want to reposition container too
             this.scene.position.set(0, 0);
             //fix ui layer
-            this.uiManager.ui.scale.set(1);
+            this.uiManager.container.scale.set(1);
         }
     }
 }

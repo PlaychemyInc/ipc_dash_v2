@@ -5,12 +5,12 @@ import { FancyButton } from '@pixi/ui';
 
 export default class UIManager {
     constructor(scene) {
-        this.uiScene = new Container();
+        this.container = new Container();
         this.scene = scene;
 
         this.buttons = [];
 
-        this.scene.game.app.stage.addChild(this.uiScene); // Add after world to render on top
+        this.scene.game.app.stage.addChild(this.container); // Add after world to render on top
     }
 
     createButton(x, y, text, onClick) {
@@ -71,6 +71,6 @@ export default class UIManager {
     }
 
     addChild(child) {
-        this.uiScene.addChild(child);
+        this.container.addChild(child);
     }
 }

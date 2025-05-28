@@ -1,9 +1,11 @@
-import { Spritesheet, Assets, Texture, AnimatedSprite, Ticker } from 'pixi.js';
+import { Container, Sprite, Text, AnimatedSprite, Ticker, Assets } from 'pixi.js';
+import { IPC_CONFIG } from '../config'
 
 export default class IPC {
     #ipcID;
     #attribute;
     constructor(config) {
+
 
         this.spritesheet = config.spritesheet;
 
@@ -14,13 +16,32 @@ export default class IPC {
         this.y = config.y;
         this.diceRollLog = config.diceRollLog;
 
+        this.container = new Container();
+        this.container.x = this.x;
+        this.container.y = this.y;
+        this.container.sortableChildren = true;
+
         this.getIPCdata();
 
         this.pauseMove = false;
         this.hitDamage = 0;
 
 
+
         return this;
+    }
+
+    async loadUI() {
+        var texture = await Assets.load('assets/shadow.png');
+        this.shadow = Sprite.from(texture);
+
+        this.shadow.scale.set((this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / (this.shadow.width));
+        this.shadow.anchor.set(0.5, 0);
+        this.shadow.y += this.sprite.height / 2 - (IPC_CONFIG.padding.bottom * IPC_CONFIG.sprite_scale);
+        this.container.addChild(this.shadow);
+
+        this.idText = new Text({ text: '#' + this.getID(), fontFamily: "Arial", fontSize: 16, fill: 0xffffff, });
+        this.container.addChild(this.idText);
     }
 
     async getIPCdata() {
@@ -44,19 +65,27 @@ export default class IPC {
 
     async loadSprite() {
 
-        const scaling = 0.5;
-
         // Create a  AnimatedSprite
-        const animatedSprite = new AnimatedSprite(this.spritesheet.animations.ipc);
+        this.sprite = new AnimatedSprite(this.spritesheet.animations.ipc);
 
-        animatedSprite.anchor.set(0.5);
-        animatedSprite.scale.set(scaling);
+        this.sprite.anchor.set(0.5);
+        this.sprite.scale.set(IPC_CONFIG.sprite_scale);
 
-        animatedSprite.x = this.x;
-        animatedSprite.y = this.y;
+        this.sprite.play();
 
-        animatedSprite.play();
-        this.sprite = animatedSprite;
+        this.container.addChild(this.sprite);
+
+        await this.loadUI();
+
+        this.sprite.zIndex = 10;
+        this.shadow.zIndex = 5;
+
+        this.idText.style.fontSize = this.sprite.height / 9;
+
+        this.idText.x -= this.sprite.width / 2;
+        this.idText.y += this.sprite.height / 2 - (IPC_CONFIG.padding.bottom * IPC_CONFIG.sprite_scale);
+
+
         this.callback(this);
 
     }
@@ -71,25 +100,25 @@ export default class IPC {
     startRace() {
         const ipc = this;
 
-        const jumpHeight = this.sprite.height / 2;
+        const jumpHeight = this.container.height / 2;
         const velocityY = 2;
-        const groundY = this.sprite.y;
-        const maxY = this.sprite.y - jumpHeight;
+        const groundY = this.container.y;
+        const maxY = this.container.y - jumpHeight;
 
         var up = true;
 
         function ipcCelebrate() {
-            if (ipc.sprite.y >= maxY && up) {
-                ipc.sprite.y -= velocityY;
-                if (ipc.sprite.y <= maxY) {
+            if (ipc.container.y >= maxY && up) {
+                ipc.container.y -= velocityY;
+                if (ipc.container.y <= maxY) {
                     up = false;
                     ipc.sprite.gotoAndStop(0);
                 }
             }
 
-            if (ipc.sprite.y <= groundY && !up) {
-                ipc.sprite.y += velocityY;
-                if (ipc.sprite.y >= groundY) {
+            if (ipc.container.y <= groundY && !up) {
+                ipc.container.y += velocityY;
+                if (ipc.container.y >= groundY) {
                     up = true;
                     ipc.sprite.gotoAndStop(7);
                 }
@@ -99,23 +128,23 @@ export default class IPC {
         const finalX = 3914;
         const moveIPC = (delta) => {
             // Move sprite only if it hasn't reached or passed the target
-            if (ipc.sprite.x < finalX) {
+            if (this.container.x < finalX) {
                 if (!ipc.pauseMove) {
                     //roll rnd 100
                     var roll = Math.random() * 100;
-                    var speed =this.getSpeed();
-                    var str = "IPC " +ipc.getID()+ " rolled " +(roll+speed);
+                    var speed = this.getSpeed();
+                    var str = "IPC " + ipc.getID() + " rolled " + (roll + speed);
                     this.diceRollLog?.addLine(str);
                     // ipc.diceOutput.updateText(roll + speed);
-                    if(roll + speed > 50){
-                        ipc.sprite.x += 1;
+                    if (roll + speed > 50) {
+                        this.container.x += 1;
                         ipc.x += 1;
                     }
                 }
 
                 // Clamp if it overshoots
-                if (ipc.sprite.x > finalX) {
-                    ipc.sprite.x = finalX;
+                if (this.container.x > finalX) {
+                    this.container.x = finalX;
                     ipc.x = finalX;
                 }
             }
@@ -154,12 +183,12 @@ export default class IPC {
         this.pauseMove = true;
         this.sprite.stop();
         function destroyRock() {
-            if(rock.health > 0){
+            if (rock.health > 0) {
                 var damage = ipc.calculateHitDamage();
                 console.log(damage);
-                rock.takeDamage(damage/100);
+                rock.takeDamage(damage / 100);
             }
-            else{
+            else {
                 ipc.pauseMove = false;
                 ipc.sprite.play();
                 Ticker.shared.remove(destroyRock);
@@ -193,40 +222,9 @@ export default class IPC {
     getHairColor() { return this.#attribute.HairColor; };
     getEyeColor() { return this.#attribute.EyeColor; };
     getHandedness() { return this.#attribute.Handedness; };
+
+    get displayObject() {
+        return this.container;
+    }
 }
-
-// animation_url: null
-// description: `2018 Nordic Human\n\nMale, 6'3", Pale Skin, Platinum Hair, Green Eyes, Right-Handed\n\n16 Strength, 14 Dexterity, 7 Intelligence, 8 Constitution, 10 Luck`
-// external_link: null
-// image: "https://i.seadn.io/gae/KayxuBDT-2eXC_eMT0qYzuMdFVHV20O08qwZyRVtq8wuToUUYtXWDeud9jP91F29mPyg2fOkKxBNqx017Ji0EhPj2t7vdUkNKw7xAe4?w=500&auto=format"
-// name: "#1 - Eve"
-// traits: Array(27) [ {…}, {…}, {…}, … ]
-// 0: Object { trait_type: "Accessories", value: "None", display_type: null, … }
-// 1: Object { trait_type: "Birth Year", value: "2018", display_type: null, … }
-// 2: Object { trait_type: "Constitution", value: "8", display_type: null, … }
-// 3: Object { trait_type: "Dexterity", value: "14", display_type: null, … }
-// 4: Object { trait_type: "Eye Color", value: "Green", display_type: null, … }
-// 5: Object { trait_type: "Force", value: "6", display_type: null, … }
-// 6: Object { trait_type: "Fortitude", value: "3", display_type: null, … }
-// 7: Object { trait_type: "Gender", value: "Male", display_type: null, … }
-// 8: Object { trait_type: "Hair Color", value: "Platinum", display_type: null, … }
-// 9: Object { trait_type: "Handedness", value: "Right", display_type: null, … }
-// 10: Object { trait_type: "Healing", value: "4", display_type: null, … }
-// 11: Object { trait_type: "Height", value: `6'3"`, display_type: null, … }
-// 12: Object { trait_type: "Intelligence", value: "7", display_type: null, … }
-// 13: Object { trait_type: "Luck", value: "10", display_type: null, … }
-// 14: Object { trait_type: "Memory", value: "2", display_type: null, … }
-// 15: Object { trait_type: "Precision", value: "6", display_type: null, … }
-// 16: Object { trait_type: "Processing", value: "2", display_type: null, … }
-// 17: Object { trait_type: "Race", value: "Human", display_type: null, … }
-// 18: Object { trait_type: "Reaction", value: "2", display_type: null, … }
-// 19: Object { trait_type: "Reasoning", value: "3", display_type: null, … }
-// 20: Object { trait_type: "Skin Color", value: "Pale", display_type: null, … }
-// 21: Object { trait_type: "Speed", value: "6", display_type: null, … }
-// 22: Object { trait_type: "Strength", value: "16", display_type: null, … }
-// 23: Object { trait_type: "Subrace", value: "Nordic Human", display_type: null, … }
-// 24: Object { trait_type: "Sustain", value: "5", display_type: null, … }
-// 25: Object { trait_type: "Tolerance", value: "5", display_type: null, … }
-// 26: Object { trait_type: "Vitality", value: "1", display_type: null, … }
-
 
