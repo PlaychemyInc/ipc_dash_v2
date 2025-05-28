@@ -1,5 +1,6 @@
 import { Assets, AnimatedSprite } from 'pixi.js';
 
+const RockHealth = 100;
 
 export default class Rock {
     constructor(manager, ipc_id, x, y, callback) {
@@ -8,6 +9,7 @@ export default class Rock {
         this.loadAssets(x, y);
         this.ipc_id = ipc_id;
         this.callback = callback;
+        this.health = RockHealth;
 
         // this.portal.speed = 0.1;
         // this.portal.visible = false;
@@ -27,6 +29,28 @@ export default class Rock {
         this.sprite.scale.set(2,2);
         this.callback(this.ipc_id, this.sprite);
         // this.scene.add(this.rock);
+    }
+
+    takeDamage(damage){
+        this.health -= damage;
+        if(this.health > 80){
+            this.sprite.gotoAndStop(1);
+        }
+        else if(this.health > 60){
+            this.sprite.gotoAndStop(2);
+        }
+        else if(this.health > 40){
+            this.sprite.gotoAndStop(3);
+        }
+        else if(this.health > 20){
+            this.sprite.gotoAndStop(4);
+        }
+        else if(this.health > 0){
+            this.sprite.gotoAndStop(5);
+        }
+        else{
+            this.sprite.gotoAndStop(6);
+        }
     }
 
     getSprite(){

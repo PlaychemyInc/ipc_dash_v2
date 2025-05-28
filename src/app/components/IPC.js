@@ -15,6 +15,10 @@ export default class IPC {
 
         this.getIPCdata();
 
+        this.pauseMove = false;
+        this.hitDamage = 0;
+
+
         return this;
     }
 
@@ -32,6 +36,8 @@ export default class IPC {
         this.setIPCprops(data.traits);
 
         this.sprite.animationSpeed = this.getSpeed() / 10;
+
+        this.hitDamage = this.calculateHitDamage();
 
     }
 
@@ -64,7 +70,7 @@ export default class IPC {
     startRace() {
         const ipc = this;
 
-        const jumpHeight = this.sprite.height/2;
+        const jumpHeight = this.sprite.height / 2;
         const velocityY = 2;
         const groundY = this.sprite.y;
         const maxY = this.sprite.y - jumpHeight;
@@ -74,7 +80,7 @@ export default class IPC {
         function ipcCelebrate() {
             if (ipc.sprite.y >= maxY && up) {
                 ipc.sprite.y -= velocityY;
-                if(ipc.sprite.y <= maxY){
+                if (ipc.sprite.y <= maxY) {
                     up = false;
                     ipc.sprite.gotoAndStop(0);
                 }
@@ -82,7 +88,7 @@ export default class IPC {
 
             if (ipc.sprite.y <= groundY && !up) {
                 ipc.sprite.y += velocityY;
-                if(ipc.sprite.y >= groundY){
+                if (ipc.sprite.y >= groundY) {
                     up = true;
                     ipc.sprite.gotoAndStop(7);
                 }
@@ -94,15 +100,18 @@ export default class IPC {
         const moveIPC = (delta) => {
             // Move sprite only if it hasn't reached or passed the target
             if (ipc.sprite.x < finalX) {
-                ipc.sprite.x += speed;
-                ipc.x += speed;
+                if (!ipc.pauseMove) {
+                    ipc.sprite.x += speed;
+                    ipc.x += speed;
+                }
 
                 // Clamp if it overshoots
                 if (ipc.sprite.x > finalX) {
                     ipc.sprite.x = finalX;
                     ipc.x = finalX;
                 }
-            } else {
+            }
+            else {
                 // Stop the ticker function once the sprite reaches the target
                 ipc.sprite.stop();
                 Ticker.shared.remove(moveIPC);
@@ -113,6 +122,42 @@ export default class IPC {
 
         // Start the movement
         Ticker.shared.add(moveIPC);
+    }
+
+    calculateHitDamage() {
+        // Base damage from strength and force
+        const base = this.getStrength() * 0.6 + this.getForce() * 0.4;
+
+        // Precision modifier (0.8 to 1.2 based on how precise)
+        const precisionFactor = 0.8 + (this.getPrecision() / 100) * 0.4;
+
+        // Luck modifier (random boost from luck)
+        const luckBoost = Math.random() < this.getLuck() / 200 ? 1.5 : 1.0;
+
+        // Final damage
+        const damage = base * precisionFactor * luckBoost;
+
+        return Math.round(damage);
+    }
+
+
+    hitRock(rock) {
+        const ipc = this;
+        this.pauseMove = true;
+        this.sprite.stop();
+        function destroyRock() {
+            if(rock.health > 0){
+                var damage = ipc.calculateHitDamage();
+                console.log(damage);
+                rock.takeDamage(damage/100);
+            }
+            else{
+                ipc.pauseMove = false;
+                ipc.sprite.play();
+                Ticker.shared.remove(destroyRock);
+            }
+        }
+        Ticker.shared.add(destroyRock);
     }
 
     getID() { return this.#ipcID };
