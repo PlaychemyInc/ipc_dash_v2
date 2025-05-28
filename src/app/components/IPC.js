@@ -103,7 +103,7 @@ export default class IPC {
                     //roll rnd 100
                     var roll = Math.random() * 100;
                     var speed =this.getSpeed();
-                    ipc.diceOutput.updateText(roll + speed);
+                    // ipc.diceOutput.updateText(roll + speed);
                     if(roll + speed > 50){
                         ipc.sprite.x += 1;
                         ipc.x += 1;
