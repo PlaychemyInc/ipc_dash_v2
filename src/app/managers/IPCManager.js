@@ -9,6 +9,7 @@ export default class IPCManager {
 
         this.scene = config.scene;
         this.rockManager = config.rockManager;
+        this.diceRollLog = config.diceRollLog;
         
         this.ipcStart = GAME.ipc_start;
         this.ipcArray = {};
@@ -54,7 +55,15 @@ export default class IPCManager {
         const spritesheet = new Spritesheet(Texture.from(this.imageURL), this.ipcSheetData);
         await spritesheet.parse();
 
-        var newIPC = new IPC(spritesheet, ipc_id, this.ipcStart.x, this.ipcStart.y, this.onSpriteLoaded.bind(this));
+        var ipcConfig = {
+            spritesheet : spritesheet,
+            id : ipc_id,
+            x : this.ipcStart.x,
+            y: this.ipcStart.y,
+            callback: this.onSpriteLoaded.bind(this),
+            diceRollLog: this.diceRollLog
+        };
+        var newIPC = new IPC(ipcConfig);
         this.ipcArray[ipc_id] = newIPC;
         this.ipcStart.y += 130;
 

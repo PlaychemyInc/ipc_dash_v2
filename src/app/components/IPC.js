@@ -3,15 +3,16 @@ import { Spritesheet, Assets, Texture, AnimatedSprite, Ticker } from 'pixi.js';
 export default class IPC {
     #ipcID;
     #attribute;
-    constructor(spritesheet, ipc_id, x, y, callback) {
+    constructor(config) {
 
-        this.spritesheet = spritesheet;
+        this.spritesheet = config.spritesheet;
 
-        this.#ipcID = ipc_id;
+        this.#ipcID = config.id;
         this.#attribute = {};
-        this.callback = callback;
-        this.x = x;
-        this.y = y;
+        this.callback = config.callback;
+        this.x = config.x;
+        this.y = config.y;
+        this.diceRollLog = config.diceRollLog;
 
         this.getIPCdata();
 
@@ -103,11 +104,12 @@ export default class IPC {
                     //roll rnd 100
                     var roll = Math.random() * 100;
                     var speed =this.getSpeed();
+                    var str = "IPC " +ipc.getID()+ " rolled " +(roll+speed);
+                    this.diceRollLog?.addLine(str);
                     // ipc.diceOutput.updateText(roll + speed);
                     if(roll + speed > 50){
                         ipc.sprite.x += 1;
                         ipc.x += 1;
-
                     }
                 }
 

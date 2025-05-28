@@ -10,6 +10,7 @@ import BasicScene from './BasicScene'
 import IPCManager from '../managers/IPCManager.js';
 
 import RockManager from '../managers/RockManager';
+import DiceRollLog from '../components/DiceRollLog';
 
 export default class gameScene extends BasicScene {
     constructor(game) {
@@ -27,19 +28,23 @@ export default class gameScene extends BasicScene {
 
         //Managers
         this.rockManager = GAME.rocks_enabled ? new RockManager(this) : null;
+        this.diceRollLog = GAME.debug ? new DiceRollLog() : null;
 
         var ipcManagerConfig = {
             scene: this,
-            rockManager: this.rockManager
+            rockManager: this.rockManager,
+            diceRollLog: this.diceRollLog
         };
         this.ipcManager = new IPCManager(ipcManagerConfig);
 
-        this.camera = new Camera(this);
+        this.camera = new Camera(this, this.diceRollLog);
 
         //UI layer
         this.uiManager = new UIManager(this);
         this.addUIElements();
         this.uiManager.hideButtons();
+
+        if(this.diceRollLog){ this.add(this.diceRollLog.displayObject); }
 
 
 

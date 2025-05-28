@@ -2,9 +2,10 @@ import { Ticker } from 'pixi.js';
 
 export default class Camera { 
 
-    constructor(gameScene){
+    constructor(gameScene, diceRollLog){
         this.camera = gameScene.scene;
         this.scene = gameScene;
+        this.diceRollLog = diceRollLog;
     }
 
     startFollowIPC(fastestIPC, maxWidth, finalX, scaleFactor){
@@ -21,11 +22,14 @@ export default class Camera {
 
             if (this.camera.pivot.x + maxWidth < finalX) {
                 this.camera.pivot.x += speed;
+                
 
                 // Clamp if it overshoots
                 if (this.camera.pivot.x + maxWidth > finalX) {
                     this.camera.pivot.x = finalX - maxWidth;
                 }
+
+                this.diceRollLog?.updateX(this.camera.pivot.x);
             } else {
                 // Stop the ticker function once the sprite reaches the target
                 Ticker.shared.remove(followIPC);
