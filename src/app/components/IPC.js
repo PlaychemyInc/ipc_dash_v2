@@ -96,13 +96,19 @@ export default class IPC {
         }
 
         const finalX = 3914;
-        const speed = this.getSpeed() / 5;
         const moveIPC = (delta) => {
             // Move sprite only if it hasn't reached or passed the target
             if (ipc.sprite.x < finalX) {
                 if (!ipc.pauseMove) {
-                    ipc.sprite.x += speed;
-                    ipc.x += speed;
+                    //roll rnd 100
+                    var roll = Math.random() * 100;
+                    var speed =this.getSpeed();
+                    ipc.diceOutput.updateText(roll + speed);
+                    if(roll + speed > 50){
+                        ipc.sprite.x += 1;
+                        ipc.x += 1;
+
+                    }
                 }
 
                 // Clamp if it overshoots
