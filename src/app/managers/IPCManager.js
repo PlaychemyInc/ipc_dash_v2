@@ -65,7 +65,7 @@ export default class IPCManager {
         };
         var newIPC = new IPC(ipcConfig);
         this.ipcArray[ipc_id] = newIPC;
-        this.ipcStart.y += 130;
+        this.ipcStart.y += 150;
 
         if(this.ipcStart.y > 4096){
             this.addIpcButton.visible = false;

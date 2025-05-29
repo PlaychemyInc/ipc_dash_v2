@@ -1,6 +1,8 @@
 import { Container, Sprite, Text, AnimatedSprite, Ticker, Assets } from 'pixi.js';
 import { IPC_CONFIG } from '../config'
 
+import SuccessRateGraph from './SuccessRateGraph';
+
 export default class IPC {
     #ipcID;
     #attribute;
@@ -25,8 +27,8 @@ export default class IPC {
 
         this.pauseMove = false;
         this.hitDamage = 0;
-
-
+        this.successRolls = 0;
+        this.totalRolls = 1;
 
         return this;
     }
@@ -42,6 +44,17 @@ export default class IPC {
 
         this.idText = new Text({ text: '#' + this.getID(), fontFamily: "Arial", fontSize: 16, fill: 0xffffff, });
         this.container.addChild(this.idText);
+
+        var graphConfig = {
+            x: this.sprite.x - ((this.sprite.width- (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) /2),
+            y: this.sprite.y,
+            width : (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale * 2)) * 0.25,
+            height : (this.sprite.height - (IPC_CONFIG.padding.top * 2)) * 0.8
+        };
+        this.graph = new SuccessRateGraph(graphConfig);
+        this.container.addChild(this.graph.displayObject);
+        this.graph.setProgress(this.successRolls/this.totalRolls);
+
     }
 
     async getIPCdata() {
@@ -82,8 +95,8 @@ export default class IPC {
 
         this.idText.style.fontSize = this.sprite.height / 9;
 
-        this.idText.x -= this.sprite.width / 2;
-        this.idText.y += this.sprite.height / 2 - (IPC_CONFIG.padding.bottom * IPC_CONFIG.sprite_scale);
+        this.idText.x = this.sprite.x - ((this.sprite.width- (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) /2),
+        this.idText.y -= (this.sprite.height / 2);
 
 
         this.callback(this);
@@ -130,6 +143,7 @@ export default class IPC {
             // Move sprite only if it hasn't reached or passed the target
             if (this.container.x < finalX) {
                 if (!ipc.pauseMove) {
+                    this.totalRolls+=1;
                     //roll rnd 100
                     var roll = Math.random() * 100;
                     var speed = this.getSpeed();
@@ -137,8 +151,9 @@ export default class IPC {
                     this.diceRollLog?.addLine(str);
                     // ipc.diceOutput.updateText(roll + speed);
                     if (roll + speed > 50) {
-                        this.container.x += 1;
-                        ipc.x += 1;
+                        this.container.x += IPC_CONFIG.base_speed;
+                        ipc.x += IPC_CONFIG.base_speed;
+                        this.successRolls += IPC_CONFIG.base_speed;
                     }
                 }
 
@@ -147,6 +162,8 @@ export default class IPC {
                     this.container.x = finalX;
                     ipc.x = finalX;
                 }
+
+                this.graph.setProgress(this.successRolls/this.totalRolls);
             }
             else {
                 // Stop the ticker function once the sprite reaches the target

@@ -4,7 +4,8 @@ export const GAME = {
     ipc_start : { x: 100, y: 600 }
 }
 
-export const IPC_CONFIG = {
+export var IPC_CONFIG = {
     padding : { top:20 , right:100 , bottom:60 ,left: 100},
-    sprite_scale: 0.5
+    sprite_scale: 0.5,
+    base_speed: 1
 }

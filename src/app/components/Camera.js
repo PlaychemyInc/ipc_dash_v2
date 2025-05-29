@@ -1,4 +1,5 @@
 import { Ticker } from 'pixi.js';
+import {IPC_CONFIG} from '../config'
 
 export default class Camera { 
 
@@ -17,7 +18,7 @@ export default class Camera {
         const followIPC = (delta) => {
             // 
             if (fastestIPC.x + (fastestIPC.sprite.width/(scaleFactor*2)) >=  maxWidth) {
-                speed = fastestIPC.getSpeed()/5;
+                speed = IPC_CONFIG.base_speed;
             }
 
             if (this.camera.pivot.x + maxWidth < finalX) {
