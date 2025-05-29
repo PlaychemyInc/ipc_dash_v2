@@ -19,7 +19,10 @@
                 { "alias": "button", "src": "assets/UI/button.png" },
                 { "alias": "button_hover", "src": "assets/UI/button_hover.png" },
                 { "alias": "button_pressed", "src": "assets/UI/button_pressed.png" },
-                { "alias": "shadow", "src": "assets/shadow.png" }
+                { "alias": "shadow", "src": "assets/shadow.png" },
+                { "alias": "FastFowardBtn", "src": "assets/UI/FastFowardBtn.png" },
+                { "alias": "FastFowardBtn_hover", "src": "assets/UI/FastFowardBtn_hover.png" },
+                { "alias": "FastFowardBtn_pressed", "src": "assets/UI/FastFowardBtn_pressed.png" }
             ]
         }
     ]

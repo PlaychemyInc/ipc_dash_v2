@@ -7,6 +7,8 @@ export default class Camera {
         this.camera = gameScene.scene;
         this.scene = gameScene;
         this.diceRollLog = diceRollLog;
+
+        this.moveWithCamera = [];
     }
 
     startFollowIPC(fastestIPC, maxWidth, finalX, scaleFactor){
@@ -23,6 +25,9 @@ export default class Camera {
 
             if (this.camera.pivot.x + maxWidth < finalX) {
                 this.camera.pivot.x += speed;
+                for(var index in this.moveWithCamera){
+                    this.moveWithCamera[index].x += speed;
+                }
                 
 
                 // Clamp if it overshoots
@@ -39,6 +44,10 @@ export default class Camera {
 
         // Start the movement
         Ticker.shared.add(followIPC);
+    }
+
+    addToMoveWithCamera(obj){
+        this.moveWithCamera.push(obj);
     }
 
 }

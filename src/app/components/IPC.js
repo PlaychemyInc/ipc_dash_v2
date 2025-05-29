@@ -36,8 +36,8 @@ export default class IPC {
     async loadUI() {
         var texture = await Assets.load('assets/shadow.png');
         this.shadow = Sprite.from(texture);
-
-        this.shadow.scale.set((this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / (this.shadow.width));
+        this.shadowScale = (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / (this.shadow.width);
+        this.shadow.scale.set(this.shadowScale);
         this.shadow.anchor.set(0.5, 0);
         this.shadow.y += this.sprite.height / 2 - (IPC_CONFIG.padding.bottom * IPC_CONFIG.sprite_scale);
         this.container.addChild(this.shadow);
@@ -113,29 +113,33 @@ export default class IPC {
     startRace() {
         const ipc = this;
 
-        const jumpHeight = this.container.height / 2;
+        const jumpHeight = this.sprite.height / 2;
         const velocityY = 2;
-        const groundY = this.container.y;
-        const maxY = this.container.y - jumpHeight;
+        const groundY = this.sprite.y;
+        const maxY = this.sprite.y - jumpHeight;
 
         var up = true;
-
-        function ipcCelebrate() {
-            if (ipc.container.y >= maxY && up) {
-                ipc.container.y -= velocityY;
-                if (ipc.container.y <= maxY) {
+        var scaleModifier = (this.shadowScale/jumpHeight)*0.8;
+        const ipcCelebrate = () => {
+            if (this.sprite.y >= maxY && up) {
+                this.sprite.y -= velocityY;
+                this.shadowScale -= scaleModifier;
+                if (this.sprite.y <= maxY) {
                     up = false;
-                    ipc.sprite.gotoAndStop(0);
+                    this.sprite.gotoAndStop(0);
                 }
             }
 
-            if (ipc.container.y <= groundY && !up) {
-                ipc.container.y += velocityY;
-                if (ipc.container.y >= groundY) {
+            if (this.sprite.y <= groundY && !up) {
+                this.sprite.y += velocityY;
+                this.shadowScale += scaleModifier;
+                if (this.sprite.y >= groundY) {
                     up = true;
-                    ipc.sprite.gotoAndStop(7);
+                    this.sprite.gotoAndStop(7);
                 }
             }
+            console.log(this.shadowScale);
+            this.shadow.scale.set(this.shadowScale);
         }
 
         const finalX = 3914;
@@ -153,7 +157,7 @@ export default class IPC {
                     if (roll + speed > 50) {
                         this.container.x += IPC_CONFIG.base_speed;
                         ipc.x += IPC_CONFIG.base_speed;
-                        this.successRolls += IPC_CONFIG.base_speed;
+                        this.successRolls += 1;
                     }
                 }
 
@@ -169,7 +173,9 @@ export default class IPC {
                 // Stop the ticker function once the sprite reaches the target
                 ipc.sprite.stop();
                 Ticker.shared.remove(moveIPC);
-
+                
+                // this.container.removeChild(this.graph);
+                this.graph.container.visible = false;
                 Ticker.shared.add(ipcCelebrate);
             }
         };

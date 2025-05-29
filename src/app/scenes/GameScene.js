@@ -1,7 +1,7 @@
 // import { Container, Text } from 'pixi.js';
 import { AnimatedSprite, Assets, Container, PI_2, Ticker } from 'pixi.js';
 
-import { GAME } from '../config'
+import { GAME, IPC_CONFIG } from '../config'
 import Camera from '../components/Camera';
 import UIManager from '../managers/UIManager';
 
@@ -115,12 +115,23 @@ export default class gameScene extends BasicScene {
         var buttonStart = this.uiManager.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.startRace.bind(this));
         buttonStart.x -= buttonStart.width;
 
+        this.fastForwardButton = this.uiManager.createFastForwardButton(this.getScreenWidth() - 10, 10, this.increaseSpeed.bind(this));
+        this.fastForwardButton.x -= this.fastForwardButton.width;
+        this.add(this.fastForwardButton);
+        this.fastForwardButton.visible = false;
+        this.camera.addToMoveWithCamera(this.fastForwardButton);
+
+    }
+
+    increaseSpeed() {
+        IPC_CONFIG.base_speed += 1;
     }
 
     startRace() {
         this.uiManager.hideButtons();
         this.ipcManager.startRace();
         this.camera.startFollowIPC(this.ipcManager.getFastestIPC(), this.getScreenWidth(), 4096, this.scaleFactor);
+        this.fastForwardButton.visible = true;
     }
 
     showPopup() {

@@ -73,4 +73,45 @@ export default class UIManager {
     addChild(child) {
         this.container.addChild(child);
     }
+
+    createFastForwardButton(x, y, onClick) {
+        var style = {
+            defaultView: Sprite.from(this.scene.assets['FastFowardBtn']),
+            hoverView: Sprite.from(this.scene.assets['FastFowardBtn_hover']),
+            pressedView: Sprite.from(this.scene.assets['FastFowardBtn_pressed']),
+            animations: {
+                hover: {
+                    props: { scale: { x: 1.02, y: 1.02, } },
+                    duration: 100,
+                },
+                pressed: {
+                    props: { scale: { x: 1, y: 1, } },
+                    duration: 100,
+                }
+            }
+        };
+        var button = new FancyButton(style);
+        button.x = x;
+        button.y = y;
+
+        button.onPress.connect(onClick);
+        // this.addChild(button);
+
+        this.fastForwardBtn = (button);
+
+        return button;
+    }
+
+    hideFastForwardButton() {
+        for (const index in this.buttons) {
+            this.buttons[index].visible = false;
+        }
+    }
+
+    showFastForwardButton() {
+        for (const index in this.buttons) {
+            this.buttons[index].visible = true;
+        }
+
+    }
 }
