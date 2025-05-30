@@ -1,5 +1,5 @@
 import { Ticker } from 'pixi.js';
-import {IPC_CONFIG} from '../config'
+import {IPC_CONFIG, GAME} from '../config'
 
 export default class Camera { 
 
@@ -11,7 +11,7 @@ export default class Camera {
         this.moveWithCamera = [];
     }
 
-    startFollowIPC(fastestIPC, maxWidth, finalX, scaleFactor){
+    startFollowIPC(ipcManager, maxWidth, finalX, scaleFactor){
 
         var speed = 0;
         maxWidth /= scaleFactor;
@@ -19,17 +19,23 @@ export default class Camera {
 
         const followIPC = (delta) => {
             // 
-            if (fastestIPC.x + (fastestIPC.sprite.width/(scaleFactor*2)) >=  maxWidth) {
-                speed = IPC_CONFIG.base_speed;
+            var fastestIPC = ipcManager.getFurthestIpc();
+
+            if (fastestIPC.getX() + (fastestIPC.view.sprite.width/(scaleFactor*2)) >=  this.camera.pivot.x + maxWidth) {
+                speed = fastestIPC.getX() + (fastestIPC.view.sprite.width/(scaleFactor*2)) -  (this.camera.pivot.x + maxWidth) + GAME.ipc_camera_padding;
+                console.log(speed);
+            }
+            else{
+                speed = 0;
             }
 
             if (this.camera.pivot.x + maxWidth < finalX) {
+
                 this.camera.pivot.x += speed;
                 for(var index in this.moveWithCamera){
                     this.moveWithCamera[index].x += speed;
                 }
                 
-
                 // Clamp if it overshoots
                 if (this.camera.pivot.x + maxWidth > finalX) {
                     this.camera.pivot.x = finalX - maxWidth;

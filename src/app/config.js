@@ -1,7 +1,8 @@
 export const GAME = {
     debug: false,
     rocks_enabled : false,
-    ipc_start : { x: 100, y: 600 }
+    ipc_start : { x: 100, y: 600 },
+    ipc_camera_padding: 2
 }
 
 export var IPC_CONFIG = {

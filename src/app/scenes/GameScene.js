@@ -130,7 +130,7 @@ export default class gameScene extends BasicScene {
     startRace() {
         this.uiManager.hideButtons();
         this.ipcManager.startRace();
-        this.camera.startFollowIPC(this.ipcManager.getFastestIPC(), this.getScreenWidth(), 4096, this.scaleFactor);
+        this.camera.startFollowIPC(this.ipcManager, this.getScreenWidth(), 4096, this.scaleFactor);
         this.fastForwardButton.visible = true;
     }
 
