@@ -62,7 +62,7 @@ export default class IpcController {
                         ipc.x += IPC_CONFIG.base_speed;
                         this.successRolls += 1;
                     }
-                    else if(roll <= this.model.getLuck()){
+                    else if(roll/2 <= this.model.getLuck()){
                         roll = Math.random() * 100;
                         if ((roll + speed > 50)) {
                             this.view.container.x += IPC_CONFIG.base_speed;
