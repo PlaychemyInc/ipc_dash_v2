@@ -14,11 +14,11 @@ export default class RockManager {
 
         var lastX = ipc.x;
         var spacing = 500;//(endX - startX - 200)/RockCount;
-        this.rocks[ipc.getID()] = [];
+        this.rocks[ipc.model.getID()] = [];
         for (let i = 0; i < RockCount; i++) {
             const x = lastX + spacing + Math.random() * 200; // staggered, randomized spacing
-            var rock = new Rock(this, ipc.getID(),  x, ipc.y, this.assetLoaded.bind(this));
-            this.rocks[ipc.getID()].push(rock);
+            var rock = new Rock(this, ipc.model.getID(),  x, ipc.y, this.assetLoaded.bind(this));
+            this.rocks[ipc.model.getID()].push(rock);
             lastX = x;
         }
 

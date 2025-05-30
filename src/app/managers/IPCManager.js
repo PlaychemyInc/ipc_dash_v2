@@ -42,26 +42,14 @@ export default class IPCManager {
 
         this.startPortal();
 
-        //https://github.com/AnnEsther/ipc_dash_page/blob/main/assets/IPCSpriteSheets/1.png
-        //https://raw.githubusercontent.com/AnnEsther/ipc_dash_page/main/assets/IPCSpriteSheets/1.png
-        this.imageURL = 'https://raw.githubusercontent.com/AnnEsther/ipc_dash_page/main/assets/IPCSpriteSheets/' + ipc_id + '.png';
-        // this.imageURL = 'assets/IPCSpriteSheets/' + ipc_id + '.png';
-
-        //Load your alternate image (according to gameData)
-        this.ipcSheetData.meta.image = this.imageURL;
-        // Step 3: Create your own spritesheet
-        // Step 4: Parse it (builds textures)
-        await Assets.load(this.imageURL);
-        const spritesheet = new Spritesheet(Texture.from(this.imageURL), this.ipcSheetData);
-        await spritesheet.parse();
-
         var ipcConfig = {
-            spritesheet : spritesheet,
+            spritesheetData :  this.ipcSheetData,
             id : ipc_id,
             x : this.ipcStart.x,
             y: this.ipcStart.y,
-            callback: this.onSpriteLoaded.bind(this),
-            diceRollLog: this.diceRollLog
+            callback: this.onIpcLoaded.bind(this),
+            diceRollLog: this.diceRollLog,
+            scene: this.scene
         };
         var newIPC = new IPC(ipcConfig);
         this.ipcArray[ipc_id] = newIPC;
@@ -85,11 +73,12 @@ export default class IPCManager {
         this.portal.stop();
     }
 
-    onSpriteLoaded(ipc) {
+    onIpcLoaded(ipc) {
         this.stopPortal();
         if(this.rockManager){
             this.rockManager.createRocks(ipc);
         }
+        // ipc.displayObject.zIndex = 1000;
         this.scene.add(ipc.displayObject);
     }
 
@@ -103,7 +92,7 @@ export default class IPCManager {
 
     startRace() {
         for (const index in this.ipcArray) {
-            this.ipcArray[index].startRace();
+            this.ipcArray[index].controller.startRace();
         }
     }
 
@@ -122,5 +111,20 @@ export default class IPCManager {
 
     getIPC(ipc_id){
         return this.ipcArray[ipc_id];
+    }
+
+    getFurthestIpc(){
+        var furthestIPC = null;
+        for (var ipc_id in this.ipcArray) {
+            if(furthestIPC){
+                if (furthestIPC.getX() > this.ipcArray[ipc_id].getX()){
+                    furthestIPC = this.ipcArray[ipc_id];
+                }
+            }
+            else {
+                furthestIPC = this.ipcArray[ipc_id];
+            }
+        }
+        return furthestIPC;
     }
 }
