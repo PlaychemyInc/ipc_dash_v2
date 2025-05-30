@@ -3,6 +3,7 @@
 import { useEffect, useRef, Component, createRef } from 'react';
 import { Application, Assets, Sprite } from 'pixi.js';
 import { initDevtools } from '@pixi/devtools';
+import { GAME } from './config';
 
 import SceneManager from './managers/SceneManager';
 
@@ -25,6 +26,7 @@ export default class PixiGame extends Component {
         var app = await this.createApp();
         this.app = app;
         initDevtools({ app });
+        GAME.app = app;
 
         //Add app to HTML DOM
         this.pixiContainer.current.appendChild(this.app.canvas);

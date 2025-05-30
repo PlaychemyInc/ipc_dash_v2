@@ -1,6 +1,8 @@
 import { Container, Sprite } from 'pixi.js';
 import BasicPopup from '../components/BasicPopup';
 import { FancyButton } from '@pixi/ui';
+import CountdownPopup from '../components/CountdownPopup';
+import { GAME } from '../config';
 
 
 export default class UIManager {
@@ -10,7 +12,15 @@ export default class UIManager {
 
         this.buttons = [];
 
-        this.scene.game.app.stage.addChild(this.container); // Add after world to render on top
+       
+        var screenWidth = GAME.app.screen.width;
+        var screenHeight = GAME.app.screen.height;
+        this.countdownPopup = new CountdownPopup(screenWidth / 2, screenHeight / 2, this.onCountdownPopupLoaded.bind(this));
+    }
+
+    async onCountdownPopupLoaded() {
+       
+        this.addChild(this.countdownPopup.displayObject);
     }
 
     createButton(x, y, text, onClick) {
@@ -70,10 +80,6 @@ export default class UIManager {
 
     }
 
-    addChild(child) {
-        this.container.addChild(child);
-    }
-
     createFastForwardButton(x, y, onClick) {
         var style = {
             defaultView: Sprite.from(this.scene.assets['FastFowardBtn']),
@@ -113,5 +119,18 @@ export default class UIManager {
             this.buttons[index].visible = true;
         }
 
+    }
+
+    startRaceClicked(callback){
+        this.hideButtons();
+        this.countdownPopup.playAnimation(callback);
+    }
+
+    addChild(child) {
+        this.container.addChild(child);
+    }
+
+    get displayObject() {
+        return this.container;
     }
 }

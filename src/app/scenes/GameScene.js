@@ -23,7 +23,6 @@ export default class gameScene extends BasicScene {
     onLoadComplete() {
 
 
-        // this.addText();
         this.addbackground();
 
         //Managers
@@ -41,14 +40,17 @@ export default class gameScene extends BasicScene {
 
         //UI layer
         this.uiManager = new UIManager(this);
+        this.add(this.uiManager.displayObject);
         this.addUIElements();
         this.uiManager.hideButtons();
 
-        if(this.diceRollLog){ this.add(this.diceRollLog.displayObject); }
+        if (this.diceRollLog) { this.add(this.diceRollLog.displayObject); }
 
-
+        
 
     }
+
+    
 
     ipcLoaded(ipcSprite) {
 
@@ -87,32 +89,13 @@ export default class gameScene extends BasicScene {
         this.topItems = this.addBgImage('topItems');
     }
 
-    addText() {
-        const style = {
-            fill: 0xffffff,
-            fontSize: 32,
-        };
-        const title = new Text({
-            text: 'Game Scene - Click to go back',
-            style
-        });
-        title.anchor.set(0.5);
-        title.x = this.getScreenWidth() / 2;
-        title.y = this.getScreenHeight() / 2;
-        title.eventMode = 'static';
-        title.cursor = 'pointer';
-
-        title.on('pointerdown', () => this.setScene('init'));
-
-        this.add(title)
-    }
 
     addUIElements() {
         this.uiManager.createPopup(this.getScreenWidth() / 2, this.getScreenHeight() / 2, this.addIPCtoScene.bind(this));
 
         this.ipcManager.addIpcButton = this.uiManager.createButton(10, 10, 'Add IPC', this.showPopup.bind(this));
 
-        var buttonStart = this.uiManager.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.startRace.bind(this));
+        var buttonStart = this.uiManager.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.onStartRaceClicked.bind(this));
         buttonStart.x -= buttonStart.width;
 
         this.fastForwardButton = this.uiManager.createFastForwardButton(this.getScreenWidth() - 10, 10, this.increaseSpeed.bind(this));
@@ -127,8 +110,11 @@ export default class gameScene extends BasicScene {
         IPC_CONFIG.base_speed += 1;
     }
 
-    startRace() {
-        this.uiManager.hideButtons();
+    onStartRaceClicked() {
+        this.uiManager.startRaceClicked(this.startRace.bind(this));
+    }
+
+    startRace(){
         this.ipcManager.startRace();
         this.camera.startFollowIPC(this.ipcManager, this.getScreenWidth(), 4096, this.scaleFactor);
         this.fastForwardButton.visible = true;

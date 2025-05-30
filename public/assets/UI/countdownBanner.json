@@ -1,0 +1,47 @@
+{"frames": {
+
+"countdownBanner_01.png":
+{
+	"frame": {"x":445,"y":1,"w":439,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":439,"h":161},
+	"sourceSize": {"w":439,"h":161}
+},
+"countdownBanner_02.png":
+{
+	"frame": {"x":1,"y":1,"w":442,"h":165},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":442,"h":165},
+	"sourceSize": {"w":442,"h":165}
+},
+"countdownBanner_03.png":
+{
+	"frame": {"x":445,"y":164,"w":439,"h":161},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":439,"h":161},
+	"sourceSize": {"w":439,"h":161}
+},
+"countdownBanner_04.png":
+{
+	"frame": {"x":1,"y":168,"w":437,"h":157},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":437,"h":157},
+	"sourceSize": {"w":437,"h":157}
+}},
+"animations": {
+	"countdownBanner": ["countdownBanner_01.png","countdownBanner_02.png","countdownBanner_03.png","countdownBanner_04.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "countdownBanner.png",
+	"format": "RGBA8888",
+	"size": {"w":885,"h":326},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c734a75939991fc65fd2d1a45a47cdab:7696131590b4f253437e2f0c0c7798dc:acfecf537b437eccd6b5c8cf642816db$"
+}
+}
