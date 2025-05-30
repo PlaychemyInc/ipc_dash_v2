@@ -117,7 +117,7 @@ export default class IPCManager {
         var furthestIPC = null;
         for (var ipc_id in this.ipcArray) {
             if(furthestIPC){
-                if (furthestIPC.getX() > this.ipcArray[ipc_id].getX()){
+                if (furthestIPC.getX() < this.ipcArray[ipc_id].getX()){
                     furthestIPC = this.ipcArray[ipc_id];
                 }
             }

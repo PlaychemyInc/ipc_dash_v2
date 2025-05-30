@@ -1,5 +1,4 @@
-import { Container, Sprite, Text, AnimatedSprite, Ticker, Assets, Spritesheet, Texture } from 'pixi.js';
-import { delay } from '../Utitlity';
+import { AnimatedSprite, Assets } from 'pixi.js';
 
 export default class CountdownPopup{
     constructor(x, y, onLoadComplete){
@@ -14,13 +13,10 @@ export default class CountdownPopup{
         const sheet = await Assets.load('assets/UI/countdownBanner.json');
         this.sprite = new AnimatedSprite(sheet.animations['countdownBanner']);
 
-        // this.portal.speed = 0.1;
         this.sprite.visible = false;
         this.sprite.anchor.set(0.5);
         this.sprite.x = this.x;
         this.sprite.y = this.y;
-        // this.sprite.play();
-        // this.portal.scale.set(0.5);
 
         this.callback();
 

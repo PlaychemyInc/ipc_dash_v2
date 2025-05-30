@@ -23,7 +23,6 @@ export default class Camera {
 
             if (fastestIPC.getX() + (fastestIPC.view.sprite.width/(scaleFactor*2)) >=  this.camera.pivot.x + maxWidth) {
                 speed = fastestIPC.getX() + (fastestIPC.view.sprite.width/(scaleFactor*2)) -  (this.camera.pivot.x + maxWidth) + GAME.ipc_camera_padding;
-                console.log(speed);
             }
             else{
                 speed = 0;
