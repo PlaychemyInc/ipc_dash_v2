@@ -14,14 +14,11 @@ export default class UIManager {
 
         this.buttons = [];
 
-       
+
         var screenWidth = GAME.app.screen.width;
         var screenHeight = GAME.app.screen.height;
         this.countdownPopup = new CountdownPopup(screenWidth / 2, screenHeight / 2, this.onCountdownPopupLoaded.bind(this));
 
-        this.winPopup = new WinPopup(screenWidth / 2, screenHeight / 2);
-        this.addChild(this.winPopup.displayObject);
-        this.hideWinPopup();
     }
 
     async onCountdownPopupLoaded() {
@@ -126,17 +123,14 @@ export default class UIManager {
 
     }
 
-    startRaceClicked(callback){
+    startRaceClicked(callback) {
         this.hideButtons();
         this.countdownPopup.playAnimation(callback);
     }
 
-    showWinPopup(){
-        this.winPopup.setVisibility(true);
-    }
-
-    hideWinPopup(){
-        this.winPopup.setVisibility(false);
+    createWinPopup(winner, finishedIPCs) {
+        this.winPopup = new WinPopup(GAME.app.screen.width / 2, GAME.app.screen.height / 2, winner, finishedIPCs);
+        this.addChild(this.winPopup.displayObject);
     }
 
     addChild(child) {

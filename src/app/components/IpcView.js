@@ -6,7 +6,7 @@ import SuccessRateGraph from './SuccessRateGraph';
 
 export default class IpcView {
     container;
-    constructor(x, y, model,spritesheetData, onSpriteLoaded, scene){
+    constructor(x, y, model, spritesheetData, onSpriteLoaded, scene){
 
         this.model = model;
         this.spritesheetData = spritesheetData;
@@ -45,11 +45,11 @@ export default class IpcView {
         // Step 3: Create your own spritesheet
         // Step 4: Parse it (builds textures)
         await Assets.load(this.imageURL);
-        const spritesheet = new Spritesheet(Texture.from(this.imageURL), this.spritesheetData);
-        await spritesheet.parse();
+        this.spritesheet = new Spritesheet(Texture.from(this.imageURL), this.spritesheetData);
+        await this.spritesheet.parse();
 
         // Create a  AnimatedSprite
-        this.sprite = new AnimatedSprite(spritesheet.animations.ipc);
+        this.sprite = new AnimatedSprite(this.spritesheet.animations.ipc);
         this.sprite.anchor.set(0.5);
         this.sprite.scale.set(IPC_CONFIG.sprite_scale);
         this.sprite.play();
@@ -79,7 +79,7 @@ export default class IpcView {
         };
         this.graph = new SuccessRateGraph(graphConfig);
         this.container.addChild(this.graph.displayObject);
-        this.graph.setProgress(this.successRolls/this.totalRolls);
+        this.graph.setProgress(this.controller.getSuccessRate());
     }
 
     setShadowTransform(){

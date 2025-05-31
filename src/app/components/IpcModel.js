@@ -31,6 +31,7 @@ export default class IpcModel {
 
     onDataLoaded(data) {
         this.description = data.description;
+        this.name = data.name;
 
         this.setIPCprops(data.traits);
 

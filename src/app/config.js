@@ -3,7 +3,9 @@ export var GAME = {
     rocks_enabled : false,
     ipc_start : { x: 100, y: 600 },
     ipc_camera_padding: 2, 
-    app : null
+    app : null,
+    ipcManager: null,
+    uiManager: null
 }
 
 export var IPC_CONFIG = {

@@ -35,11 +35,14 @@ export default class gameScene extends BasicScene {
             diceRollLog: this.diceRollLog
         };
         this.ipcManager = new IPCManager(ipcManagerConfig);
+        GAME.ipcManager = this.ipcManager;
 
         this.camera = new Camera(this, this.diceRollLog);
 
         //UI layer
         this.uiManager = new UIManager(this);
+        GAME.uiManager = this.uiManager;
+
         this.add(this.uiManager.displayObject);
         this.addUIElements();
         this.uiManager.hideButtons();
@@ -126,7 +129,6 @@ export default class gameScene extends BasicScene {
     }
 
     onRaceFinished() {
-        this.uiManager.showWinPopup();
     }
 
     showPopup() {

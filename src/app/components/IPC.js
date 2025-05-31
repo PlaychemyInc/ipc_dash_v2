@@ -21,6 +21,7 @@ export default class IPC {
         this.model = new IpcModel(config, this.onDataLoaded.bind(this));
         this.view = new IpcView(this.x, this.y, this.model, config.spritesheetData, this.onSpriteLoaded.bind(this), this.scene);
         this.controller = new IpcController(this.view, this.model);
+        this.view.controller = this.controller;
 
     }
 

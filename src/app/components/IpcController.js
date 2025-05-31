@@ -1,5 +1,5 @@
 import { Container, Sprite, Text, AnimatedSprite, Ticker, Assets, Spritesheet, Texture } from 'pixi.js';
-import { IPC_CONFIG } from '../config'
+import { GAME, IPC_CONFIG } from '../config'
 
 
 export default class IpcController {
@@ -87,6 +87,7 @@ export default class IpcController {
                 
                 // this.container.removeChild(this.graph);
                 this.view.graph.container.visible = false;
+                GAME.ipcManager.notifyFinished(this);
                 this.model.raceCompleted = true;
                 Ticker.shared.add(ipcCelebrate);
             }
@@ -104,7 +105,6 @@ export default class IpcController {
         function destroyRock() {
             if (rock.health > 0) {
                 var damage = ipc.model.calculateHitDamage();
-                console.log(damage);
                 rock.takeDamage(damage / 100);
             }
             else {
@@ -114,5 +114,9 @@ export default class IpcController {
             }
         }
         Ticker.shared.add(destroyRock);
+    }
+
+    getSuccessRate(){
+        return  this.successRolls /this.totalRolls;
     }
 }

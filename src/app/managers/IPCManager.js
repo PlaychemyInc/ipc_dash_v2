@@ -1,5 +1,5 @@
 import { Spritesheet, Assets, Texture, AnimatedSprite } from 'pixi.js';
-import {GAME} from '../config'
+import { GAME } from '../config'
 import IPC from '../components/IPC.js';
 
 const ipcSpriteSheetPath = 'assets/IpcSpriteSheet.json';
@@ -10,9 +10,10 @@ export default class IPCManager {
         this.scene = config.scene;
         this.rockManager = config.rockManager;
         this.diceRollLog = config.diceRollLog;
-        
+
         this.ipcStart = GAME.ipc_start;
         this.ipcArray = {};
+        this.finishedIPCs = [];
 
         this.loadPortalAssets();
         this.loadIpcSpriteJson();
@@ -43,9 +44,9 @@ export default class IPCManager {
         this.startPortal();
 
         var ipcConfig = {
-            spritesheetData :  this.ipcSheetData,
-            id : ipc_id,
-            x : this.ipcStart.x,
+            spritesheetData: this.ipcSheetData,
+            id: ipc_id,
+            x: this.ipcStart.x,
             y: this.ipcStart.y,
             callback: this.onIpcLoaded.bind(this),
             diceRollLog: this.diceRollLog,
@@ -55,7 +56,7 @@ export default class IPCManager {
         this.ipcArray[ipc_id] = newIPC;
         this.ipcStart.y += 150;
 
-        if(this.ipcStart.y > 4096){
+        if (this.ipcStart.y > 4096) {
             this.addIpcButton.visible = false;
         }
 
@@ -75,7 +76,7 @@ export default class IPCManager {
 
     onIpcLoaded(ipc) {
         this.stopPortal();
-        if(this.rockManager){
+        if (this.rockManager) {
             this.rockManager.createRocks(ipc);
         }
         // ipc.displayObject.zIndex = 1000;
@@ -101,7 +102,7 @@ export default class IPCManager {
         let maxX = -Infinity;
         var fastestIPC;
         for (var ipc_id in this.ipcArray) {
-            if(maxX < this.ipcArray[ipc_id].x){
+            if (maxX < this.ipcArray[ipc_id].x) {
                 maxX = this.ipcArray[ipc_id].x;
                 fastestIPC = this.ipcArray[ipc_id];
             }
@@ -109,15 +110,15 @@ export default class IPCManager {
         return fastestIPC;
     }
 
-    getIPC(ipc_id){
+    getIPC(ipc_id) {
         return this.ipcArray[ipc_id];
     }
 
-    getFurthestIpc(){
+    getFurthestIpc() {
         var furthestIPC = null;
         for (var ipc_id in this.ipcArray) {
-            if(furthestIPC){
-                if (furthestIPC.getX() < this.ipcArray[ipc_id].getX()){
+            if (furthestIPC) {
+                if (furthestIPC.getX() < this.ipcArray[ipc_id].getX()) {
                     furthestIPC = this.ipcArray[ipc_id];
                 }
             }
@@ -128,14 +129,26 @@ export default class IPCManager {
         return furthestIPC;
     }
 
-    allIpcsFinished(){
-        var allFinished = true;
-        for (var ipc_id in this.ipcArray) {
-            allFinished = allFinished && this.ipcArray[ipc_id].model.raceCompleted;
-            if(!allFinished){
-                return allFinished;
-            }
+    allIpcsFinished() {
+        return this.finishedIPCs.length == Object.keys(this.ipcArray).length;
+    }
+
+    notifyFinished(ipcView) {
+        if(this.finishedIPCs.length < 3){
+            this.finishedIPCs.push(ipcView);
         }
-        return allFinished;
+        
+        if (this.finishedIPCs.length == 3 || this.finishedIPCs.length == Object.keys(this.ipcArray).length) {
+
+            var winner = [
+                { name: 'Runner A', texture: 'Portal', rank: 1, successRate: 92 },
+                { name: 'Runner B', texture: 'Portal', rank: 2, successRate: 85 },
+                { name: 'Runner C', texture: 'Portal', rank: 3, successRate: 77 },
+            ];
+
+            
+            GAME.uiManager.createWinPopup(winner, this.finishedIPCs);
+        }
+        
     }
 }
