@@ -1,8 +1,10 @@
 import { Container, Sprite } from 'pixi.js';
-import BasicPopup from '../components/BasicPopup';
+import AddIpcPopup from '../components/AddIpcPopup';
 import { FancyButton } from '@pixi/ui';
 import CountdownPopup from '../components/CountdownPopup';
 import { GAME } from '../config';
+import WinPopup from '../components/WinPopup'
+
 
 
 export default class UIManager {
@@ -16,10 +18,13 @@ export default class UIManager {
         var screenWidth = GAME.app.screen.width;
         var screenHeight = GAME.app.screen.height;
         this.countdownPopup = new CountdownPopup(screenWidth / 2, screenHeight / 2, this.onCountdownPopupLoaded.bind(this));
+
+        this.winPopup = new WinPopup(screenWidth / 2, screenHeight / 2);
+        this.addChild(this.winPopup.displayObject);
+        this.hideWinPopup();
     }
 
     async onCountdownPopupLoaded() {
-       
         this.addChild(this.countdownPopup.displayObject);
     }
 
@@ -66,17 +71,17 @@ export default class UIManager {
     }
 
     createPopup(x, y, callback) {
-        this.popup = new BasicPopup(x, y, "Add your IPC", callback);
-        this.addChild(this.popup);
-        this.popup.zIndex = 1000;
+        this.addIpcPopup = new AddIpcPopup(x, y, "Add your IPC", callback);
+        this.addChild(this.addIpcPopup);
+        this.addIpcPopup.zIndex = 1000;
     }
 
     hidePopup() {
-        this.popup.visible = false;
+        this.addIpcPopup.visible = false;
     }
 
     showPopup() {
-        this.popup.visible = true;
+        this.addIpcPopup.visible = true;
 
     }
 
@@ -124,6 +129,14 @@ export default class UIManager {
     startRaceClicked(callback){
         this.hideButtons();
         this.countdownPopup.playAnimation(callback);
+    }
+
+    showWinPopup(){
+        this.winPopup.setVisibility(true);
+    }
+
+    hideWinPopup(){
+        this.winPopup.setVisibility(false);
     }
 
     addChild(child) {

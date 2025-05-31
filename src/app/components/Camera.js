@@ -11,7 +11,7 @@ export default class Camera {
         this.moveWithCamera = [];
     }
 
-    startFollowIPC(ipcManager, maxWidth, finalX, scaleFactor){
+    startFollowIPC(ipcManager, maxWidth, finalX, scaleFactor, onRaceFinished){
 
         var speed = 0;
         maxWidth /= scaleFactor;
@@ -41,9 +41,14 @@ export default class Camera {
                 }
 
                 this.diceRollLog?.updateX(this.camera.pivot.x);
-            } else {
-                // Stop the ticker function once the sprite reaches the target
-                Ticker.shared.remove(followIPC);
+            } 
+            else {
+                //wait for all ipcs to finish
+                if(ipcManager.allIpcsFinished()){
+                    onRaceFinished();
+                    // Stop the ticker function once the sprite reaches the target
+                    Ticker.shared.remove(followIPC);
+                }
             }
         };
 

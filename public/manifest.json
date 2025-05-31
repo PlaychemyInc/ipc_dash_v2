@@ -23,7 +23,8 @@
                 { "alias": "FastFowardBtn", "src": "assets/UI/FastFowardBtn.png" },
                 { "alias": "FastFowardBtn_hover", "src": "assets/UI/FastFowardBtn_hover.png" },
                 { "alias": "FastFowardBtn_pressed", "src": "assets/UI/FastFowardBtn_pressed.png" },
-                { "alias": "countdownBanner", "src": "assets/UI/countdownBanner.png" }
+                { "alias": "countdownBanner", "src": "assets/UI/countdownBanner.png" },
+                { "alias": "HallOfFame", "src": "assets/UI/HallOfFame.png" }
             ]
         }
     ]

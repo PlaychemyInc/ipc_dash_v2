@@ -46,24 +46,28 @@ export default class gameScene extends BasicScene {
 
         if (this.diceRollLog) { this.add(this.diceRollLog.displayObject); }
 
-        
+
 
     }
 
-    
+
 
     ipcLoaded(ipcSprite) {
 
     }
 
-    async addIPCtoScene(ipc_id) {
+    async addIPCtoScene(id) {
 
-        this.uiManager.hidePopup();
-        this.uiManager.showButtons();
+        var ipc_id = parseInt(id);
+        if (ipc_id >= 1 && ipc_id <= 12000) {
 
-        this.ipcManager.addIPC(ipc_id, this.ipcLoaded.bind(this));
+            this.uiManager.hidePopup();
+            this.uiManager.showButtons();
 
-        this.ensureFitsScreen(this.ipcManager.getMaxHieght());
+            this.ipcManager.addIPC(ipc_id, this.ipcLoaded.bind(this));
+
+            this.ensureFitsScreen(this.ipcManager.getMaxHieght());
+        }
 
     }
 
@@ -102,7 +106,8 @@ export default class gameScene extends BasicScene {
         this.fastForwardButton.x -= this.fastForwardButton.width;
         this.add(this.fastForwardButton);
         this.fastForwardButton.visible = false;
-        this.camera.addToMoveWithCamera(this.fastForwardButton);
+        // this.camera.addToMoveWithCamera(this.fastForwardButton);
+        this.camera.addToMoveWithCamera(this.uiManager.displayObject);
 
     }
 
@@ -114,10 +119,14 @@ export default class gameScene extends BasicScene {
         this.uiManager.startRaceClicked(this.startRace.bind(this));
     }
 
-    startRace(){
+    startRace() {
         this.ipcManager.startRace();
-        this.camera.startFollowIPC(this.ipcManager, this.getScreenWidth(), 4096, this.scaleFactor);
+        this.camera.startFollowIPC(this.ipcManager, this.getScreenWidth(), 4096, this.scaleFactor, this.onRaceFinished.bind(this));
         this.fastForwardButton.visible = true;
+    }
+
+    onRaceFinished() {
+        this.uiManager.showWinPopup();
     }
 
     showPopup() {
@@ -134,7 +143,7 @@ export default class gameScene extends BasicScene {
             // Optionally, you might want to reposition container too
             this.scene.position.set(0, 0);
             //fix ui layer
-            this.uiManager.displayObject.scale.set(1/this.scaleFactor);
+            this.uiManager.displayObject.scale.set(1 / this.scaleFactor);
         }
     }
 }

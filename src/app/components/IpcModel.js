@@ -7,6 +7,8 @@ export default class IpcModel {
         this.#attribute = {};
         this.callback = onDataLoaded;
 
+        this.raceCompleted = false;
+
         this.getIPCdata();
     }
 

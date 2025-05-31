@@ -45,7 +45,7 @@ export default class IpcController {
             this.view.shadow.scale.set(this.view.shadowScale);
         }
 
-        const finalX = 3914;
+        const finalX = 4020;
         const moveIPC = (delta) => {
             // Move sprite only if it hasn't reached or passed the target
             if (this.view.container.x < finalX) {
@@ -87,6 +87,7 @@ export default class IpcController {
                 
                 // this.container.removeChild(this.graph);
                 this.view.graph.container.visible = false;
+                this.model.raceCompleted = true;
                 Ticker.shared.add(ipcCelebrate);
             }
         };

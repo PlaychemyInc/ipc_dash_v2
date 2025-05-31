@@ -3,7 +3,7 @@ import BasicButton from './BasicButton';
 import InputLabel from './InputLabel';
 
 
-export default class BasicPopup extends Container {
+export default class AddIpcPopup extends Container {
   constructor(x, y, message, onClose = () => {}) {
     super();
 

@@ -127,4 +127,15 @@ export default class IPCManager {
         }
         return furthestIPC;
     }
+
+    allIpcsFinished(){
+        var allFinished = true;
+        for (var ipc_id in this.ipcArray) {
+            allFinished = allFinished && this.ipcArray[ipc_id].model.raceCompleted;
+            if(!allFinished){
+                return allFinished;
+            }
+        }
+        return allFinished;
+    }
 }
