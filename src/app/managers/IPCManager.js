@@ -37,9 +37,9 @@ export default class IPCManager {
         this.scene.add(this.portal);
     }
 
-    async addIPC(ipc_id, callback) {
+    async addIPC(ipc_id, callback = () => {}) {
 
-        this.callback = callback;
+        // this.callback = callback;
 
         this.startPortal();
 
