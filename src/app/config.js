@@ -5,7 +5,8 @@ export var GAME = {
     ipc_camera_padding: 2, 
     app : null,
     ipcManager: null,
-    uiManager: null
+    uiManager: null,
+    sceneManager: null
 }
 
 export var IPC_CONFIG = {

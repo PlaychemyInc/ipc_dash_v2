@@ -35,6 +35,7 @@ export default class PixiGame extends Component {
         this.assets = Assets;
 
         this.sceneManager = new SceneManager(this);
+        GAME.sceneManager = this.sceneManager;
         //Set Scene
         await this.sceneManager.setScene('init');
 
