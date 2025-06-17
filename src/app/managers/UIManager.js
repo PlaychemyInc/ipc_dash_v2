@@ -25,7 +25,7 @@ export default class UIManager {
         this.addChild(this.countdownPopup.displayObject);
     }
 
-    createButton(x, y, text, onClick) {
+    createButton(x, y, text, onClick, onDoubleClick = () => {}) {
         var style = {
             defaultView: Sprite.from(this.scene.assets['button']),
             hoverView: Sprite.from(this.scene.assets['button_hover']),
@@ -46,10 +46,27 @@ export default class UIManager {
         button.x = x;
         button.y = y;
 
-        button.onPress.connect(onClick);
         this.addChild(button);
-
         this.buttons.push(button);
+
+        // ---- Single & Double click logic ----
+        let clickTimeout = null;
+        const doubleClickThreshold = 300;  // milliseconds
+
+        button.onPress.connect(() => {
+            if (clickTimeout) {
+                // double click detected
+                clearTimeout(clickTimeout);
+                clickTimeout = null;
+                onDoubleClick();
+            } else {
+                // start timer for single click
+                clickTimeout = setTimeout(() => {
+                    clickTimeout = null;
+                    onClick();
+                }, doubleClickThreshold);
+            }
+        });
 
         return button;
     }
@@ -67,8 +84,8 @@ export default class UIManager {
 
     }
 
-    createPopup(x, y, callback) {
-        this.addIpcPopup = new AddIpcPopup(x, y, "Add your IPC", callback);
+    createPopup(x, y, addIPC, addMultipleIPC) {
+        this.addIpcPopup = new AddIpcPopup(x, y, addIPC, addMultipleIPC);
         this.addChild(this.addIpcPopup);
         this.addIpcPopup.zIndex = 1000;
     }
@@ -103,7 +120,7 @@ export default class UIManager {
         button.y = y;
 
         button.onPress.connect(onClick);
-        // this.addChild(button);
+        this.addChild(button);
 
         this.fastForwardBtn = (button);
 
