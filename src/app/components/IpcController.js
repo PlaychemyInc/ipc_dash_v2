@@ -57,18 +57,17 @@ export default class IpcController {
                     var str = "IPC " + ipc.model.getID() + " rolled " + (roll + speed);
                     this.diceRollLog?.addLine(str);
                     // ipc.diceOutput.updateText(roll + speed);
-                    if ((roll + speed > 50)) {
+                    if ((roll > 50)) {
                         this.view.container.x += IPC_CONFIG.base_speed;
                         ipc.x += IPC_CONFIG.base_speed;
                         this.successRolls += 1;
+                        ipc.model.points += 0.1; //point system
                     }
-                    else if(roll/2 <= this.model.getLuck()){
-                        roll = Math.random() * 100;
-                        if ((roll + speed > 50)) {
-                            this.view.container.x += IPC_CONFIG.base_speed;
-                            ipc.x += IPC_CONFIG.base_speed;
-                            this.successRolls += 1;
-                        }
+                    else if(ipc.model.points > 0){ //point system
+                        ipc.model.points -= 1; //point system
+                        this.view.container.x += IPC_CONFIG.base_speed;
+                        ipc.x += IPC_CONFIG.base_speed;
+                        this.successRolls += 1;
                     }
                 }
 
