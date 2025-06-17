@@ -1,7 +1,7 @@
 import { Container, Graphics, Text, Assets, Sprite, AnimatedSprite } from 'pixi.js';
 import BasicButton from './BasicButton';
 import InputLabel from './InputLabel';
-import { GAME, IPC_CONFIG } from '../config'
+import { GAME, IPC_CONFIG, SceneManager } from '../config'
 
 
 
@@ -17,21 +17,36 @@ export default class WinPopup {
     this.sprite.anchor.set(0.5);
     this.container.addChild(this.sprite);
 
+    // Add close button
+    this.createCloseButton();
 
     this.cards = [];
     this.createWinnerGrid(finishedIPCs);
 
   }
 
+  createCloseButton() {
+    this.closeBtn = new BasicButton('X', 40, 40, () => {
+      GAME.sceneManager.setScene('game');
+    });
+
+    // Red color background
+    this.closeBtn.drawBackground(0xff0000);
+    this.closeBtn.x = this.sprite.x + 10 + this.sprite.width / 3 ;
+    this.closeBtn.y = this.sprite.y - this.sprite.height / 3;
+
+    this.container.addChild(this.closeBtn);
+  }
+
   createWinnerGrid(finishedIPCs) {
     const cardWidth = this.sprite.width * 0.55 / 3;
     const cardHeight = this.sprite.height * 0.4;
     const spacing = 20;
-    const startX =  -(finishedIPCs.length * (cardWidth + spacing) - spacing)/2;
+    const startX = -(finishedIPCs.length * (cardWidth + spacing) - spacing) / 2;
     const startY = - cardHeight * 0.38;
     finishedIPCs.forEach((ipc, index) => {
-      
-      
+
+
       const card = new Container();
       card.x = startX + index * (cardWidth + spacing);
       card.y = startY;
@@ -97,7 +112,7 @@ export default class WinPopup {
     }
   }
 
-  updateData(){
+  updateData() {
     var winners = GAME.ipcManager.finishedIPCs;
 
 

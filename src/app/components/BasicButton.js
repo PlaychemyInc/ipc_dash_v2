@@ -5,6 +5,8 @@ export default class BasicButton extends Container {
     super();
     this.interactive = true;
     this.cursor = 'pointer';
+    this.width = width;
+    this.height = height;
 
     this.bg = new Graphics()
       .beginFill(0x3366ff)
@@ -31,4 +33,11 @@ export default class BasicButton extends Container {
       this.bg.tint = 0xffffff;
     });
   }
+
+  drawBackground(color) {
+    // this.bg.clear();
+    this.bg.roundRect(0, 0, this.width, this.height, 10);
+    this.bg.fill(color);
+  }
+
 }
