@@ -17,6 +17,9 @@ export default class gameScene extends BasicScene {
         super(game, 'game-scene');
         this.scaleFactor = 1;
 
+        //reset attrubutes
+        IPC_CONFIG.base_speed = 1;
+        GAME.ipc_start = { x: 100, y: 600 };
 
     }
 
@@ -55,9 +58,9 @@ export default class gameScene extends BasicScene {
 
 
 
-    ipcLoaded(ipcSprite) {
+    // ipcLoaded(ipcSprite) {
 
-    }
+    // }
 
     async addIPCtoScene(id) {
 
@@ -67,10 +70,24 @@ export default class gameScene extends BasicScene {
             this.uiManager.hidePopup();
             this.uiManager.showButtons();
 
-            this.ipcManager.addIPC(ipc_id, this.ipcLoaded.bind(this));
+            this.ipcManager.addIPC(ipc_id, () => {});
 
             this.ensureFitsScreen(this.ipcManager.getMaxHieght());
         }
+
+    }
+
+    async addMultipleIPCsToScene(ids){
+
+        this.uiManager.hidePopup();
+        this.uiManager.showButtons();
+
+        for(var id in ids){
+            var ipc_id = parseInt(ids[id]);
+            this.ipcManager.addIPC(ipc_id, () => {});
+        }
+
+        this.ensureFitsScreen(this.ipcManager.getMaxHieght());
 
     }
 
@@ -98,16 +115,16 @@ export default class gameScene extends BasicScene {
 
 
     addUIElements() {
-        this.uiManager.createPopup(this.getScreenWidth() / 2, this.getScreenHeight() / 2, this.addIPCtoScene.bind(this));
+        this.uiManager.createPopup(this.getScreenWidth() / 2, this.getScreenHeight() / 2, this.addIPCtoScene.bind(this), this.addMultipleIPCsToScene.bind(this));
 
         this.ipcManager.addIpcButton = this.uiManager.createButton(10, 10, 'Add IPC', this.showPopup.bind(this));
 
-        var buttonStart = this.uiManager.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.onStartRaceClicked.bind(this));
+        var buttonStart = this.uiManager.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.onStartRaceClicked.bind(this), this.onStartRaceQuick.bind(this));
         buttonStart.x -= buttonStart.width;
 
         this.fastForwardButton = this.uiManager.createFastForwardButton(this.getScreenWidth() - 10, 10, this.increaseSpeed.bind(this));
         this.fastForwardButton.x -= this.fastForwardButton.width;
-        this.add(this.fastForwardButton);
+        // this.add(this.fastForwardButton);
         this.fastForwardButton.visible = false;
         // this.camera.addToMoveWithCamera(this.fastForwardButton);
         this.camera.addToMoveWithCamera(this.uiManager.displayObject);
@@ -120,6 +137,11 @@ export default class gameScene extends BasicScene {
 
     onStartRaceClicked() {
         this.uiManager.startRaceClicked(this.startRace.bind(this));
+    }
+
+    onStartRaceQuick(){
+        this.uiManager.hideButtons();
+        this.startRace();
     }
 
     startRace() {
