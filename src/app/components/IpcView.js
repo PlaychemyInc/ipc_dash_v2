@@ -53,7 +53,7 @@ export default class IpcView {
         this.sprite.anchor.set(0.5);
         this.sprite.scale.set(IPC_CONFIG.sprite_scale);
         this.sprite.play();
-        this.sprite.animationSpeed = this.model.getSpeed() / 10;
+        this.sprite.animationSpeed = 0.5;//this.model.getSpeed() / 10;
 
         this.container.addChild(this.sprite);
 

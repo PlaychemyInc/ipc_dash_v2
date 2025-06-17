@@ -8,6 +8,7 @@ export default class IpcModel {
         this.callback = onDataLoaded;
 
         this.raceCompleted = false;
+        this.points = 0; //point system
 
         this.getIPCdata();
     }
@@ -24,9 +25,11 @@ export default class IpcModel {
     }
 
     setIPCprops(traits) {
-        traits.forEach(trait => {
-            this.#attribute[trait.trait_type] = trait.value;
-        });
+        if (traits) {
+            traits.forEach(trait => {
+                this.#attribute[trait.trait_type] = trait.value;
+            });
+        }
     }
 
     onDataLoaded(data) {
