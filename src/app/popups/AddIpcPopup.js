@@ -1,6 +1,6 @@
 import { Container, Graphics, Text } from 'pixi.js';
-import BasicButton from './BasicButton';
-import InputLabel from './InputLabel';
+import BasicButton from '../components/BasicButton';
+import InputLabel from '../components/InputLabel';
 
 class SimpleSlider extends Container {
   constructor(min, max, initialValue, onChange) {

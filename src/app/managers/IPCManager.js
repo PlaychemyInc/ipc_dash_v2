@@ -130,13 +130,17 @@ export default class IPCManager {
     }
 
     allIpcsFinished() {
+        console.log("Finished IPCs length: " + this.finishedIPCs.length);
+        console.log("IPCs length: " + Object.keys(this.ipcArray).length);
         return this.finishedIPCs.length == Object.keys(this.ipcArray).length;
     }
 
     notifyFinished(ipcView) {
-        if(this.finishedIPCs.length < 3){
-            this.finishedIPCs.push(ipcView);
-        }
+
+        this.finishedIPCs.push(ipcView);
+        
+        // if(this.finishedIPCs.length < 3){
+        // }
         
         if (this.finishedIPCs.length == 3 || this.finishedIPCs.length == Object.keys(this.ipcArray).length) {
 
@@ -147,7 +151,7 @@ export default class IPCManager {
             ];
 
             
-            GAME.uiManager.createWinPopup(winner, this.finishedIPCs);
+            GAME.uiManager.createWinPopup(winner, this.finishedIPCs.slice(0, 3));
         }
         
     }

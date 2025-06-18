@@ -163,9 +163,9 @@ export default class gameScene extends BasicScene {
         if (y > this.getScreenHeight()) {
             // Calculate scale factor to fit y into screen height
             this.scaleFactor = this.getScreenHeight() / y; // scale = screenHeight / y  (scale down so y fits exactly)
-            this.scene.scale.set(this.scaleFactor);
+            this.container.scale.set(this.scaleFactor);
             // Optionally, you might want to reposition container too
-            this.scene.position.set(0, 0);
+            this.container.position.set(0, 0);
             //fix ui layer
             this.uiManager.displayObject.scale.set(1 / this.scaleFactor);
         }

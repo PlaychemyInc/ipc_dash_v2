@@ -14,7 +14,7 @@ export default class TransitionOverlay extends Container {
   fadeIn() {
     return new Promise((resolve) => {
       this.overlay.alpha = 1;
-      this.app.stage.addChild(this);
+      // this.app.stage.addChild(this); TODO
       let elapsed = 0;
 
       const tick = (delta) => {
@@ -35,7 +35,7 @@ export default class TransitionOverlay extends Container {
   fadeOut() {
     return new Promise((resolve) => {
       this.overlay.alpha = 0;
-      this.app.stage.addChild(this);
+      // this.app.stage.addChild(this); TODO
       let elapsed = 0;
 
       const tick = (delta) => {

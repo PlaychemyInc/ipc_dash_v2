@@ -1,12 +1,15 @@
-import { Container, Graphics, Text, Assets, Sprite, AnimatedSprite } from 'pixi.js';
-import BasicButton from './BasicButton';
-import InputLabel from './InputLabel';
-import { GAME, IPC_CONFIG, SceneManager } from '../config'
+import { Container, Graphics, Text, Assets, Sprite, AnimatedSprite, Ticker } from 'pixi.js';
+import BasicButton from '../components/BasicButton';
+import InputLabel from '../components/InputLabel';
+import { GAME, IPC_CONFIG } from '../config'
+import SceneManager from '../managers/SceneManager';
 
 
 
 export default class WinPopup {
-  constructor(x, y, winner, finishedIPCs) {
+  constructor(scene, x, y, winner, finishedIPCs) {
+
+    this.scene = scene;
 
     this.container = new Container();
     this.container.x = x;
@@ -18,25 +21,26 @@ export default class WinPopup {
     this.container.addChild(this.sprite);
 
     // Add close button
-    this.createCloseButton();
+    // this.createCloseButton();
 
     this.cards = [];
     this.createWinnerGrid(finishedIPCs);
 
   }
 
-  createCloseButton() {
-    this.closeBtn = new BasicButton('X', 40, 40, () => {
-      GAME.sceneManager.setScene('game');
-    });
+  // createCloseButton() {
+  //   this.closeBtn = new BasicButton('X', 40, 40, () => {
+  //     Ticker.shared.destroy();
+  //     this.scene.setScene('game');
+  //   });
 
-    // Red color background
-    this.closeBtn.drawBackground(0xff0000);
-    this.closeBtn.x = this.sprite.x + 10 + this.sprite.width / 3 ;
-    this.closeBtn.y = this.sprite.y - this.sprite.height / 3;
+  //   // Red color background
+  //   this.closeBtn.drawBackground(0xff0000);
+  //   this.closeBtn.x = this.sprite.x + 10 + this.sprite.width / 3;
+  //   this.closeBtn.y = this.sprite.y - this.sprite.height / 3;
 
-    this.container.addChild(this.closeBtn);
-  }
+  //   this.container.addChild(this.closeBtn);
+  // }
 
   createWinnerGrid(finishedIPCs) {
     const cardWidth = this.sprite.width * 0.55 / 3;

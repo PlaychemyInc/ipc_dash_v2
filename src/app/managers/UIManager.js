@@ -1,9 +1,9 @@
 import { Container, Sprite } from 'pixi.js';
-import AddIpcPopup from '../components/AddIpcPopup';
+import AddIpcPopup from '../popups/AddIpcPopup';
 import { FancyButton } from '@pixi/ui';
-import CountdownPopup from '../components/CountdownPopup';
+import CountdownPopup from '../popups/CountdownPopup';
 import { GAME } from '../config';
-import WinPopup from '../components/WinPopup'
+import WinPopup from '../popups/WinPopup'
 
 
 
@@ -15,8 +15,8 @@ export default class UIManager {
         this.buttons = [];
 
 
-        var screenWidth = GAME.app.screen.width;
-        var screenHeight = GAME.app.screen.height;
+        var screenWidth = this.scene.getScreenWidth();
+        var screenHeight = this.scene.getScreenHeight();
         this.countdownPopup = new CountdownPopup(screenWidth / 2, screenHeight / 2, this.onCountdownPopupLoaded.bind(this));
 
     }
@@ -146,7 +146,7 @@ export default class UIManager {
     }
 
     createWinPopup(winner, finishedIPCs) {
-        this.winPopup = new WinPopup(GAME.app.screen.width / 2, GAME.app.screen.height / 2, winner, finishedIPCs);
+        this.winPopup = new WinPopup(this.scene, this.scene.getScreenWidth() / 2, this.scene.getScreenHeight() / 2, winner, finishedIPCs);
         this.addChild(this.winPopup.displayObject);
     }
 
