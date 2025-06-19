@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/app/components/InputLabel.js"  ],
   "exclude": [
     "node_modules"
   ]

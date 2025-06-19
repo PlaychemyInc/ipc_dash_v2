@@ -7,7 +7,7 @@ import UIManager from '../managers/UIManager';
 
 import { Text, Sprite } from 'pixi.js';
 import BasicScene from './BasicScene'
-import IPCManager from '../managers/IPCManager.js';
+import IPCManager from '../managers/IPCManager';
 
 import RockManager from '../managers/RockManager';
 
@@ -16,13 +16,15 @@ export default class gameScene extends BasicScene {
         super(game, 'game-scene');
         this.scaleFactor = 1;
 
+       
+
         //reset attrubutes
         IPC_CONFIG.base_speed = 1;
         GAME.ipc_start = { x: 100, y: 600 };
 
     }
 
-    onLoadComplete() {
+    async onLoadComplete() {
 
 
         this.addbackground();
@@ -30,13 +32,9 @@ export default class gameScene extends BasicScene {
         //Managers
         this.rockManager = GAME.rocks_enabled ? new RockManager(this) : null;
 
-        var ipcManagerConfig = {
-            scene: this,
-            rockManager: this.rockManager,
-            diceRollLog: this.diceRollLog
-        };
-        this.ipcManager = new IPCManager(ipcManagerConfig);
-        GAME.ipcManager = this.ipcManager;
+
+        const ipcManager = IPCManager.getInstance({ scene:this, rockManager:this.rockManager, diceRollLog:this.diceRollLog });
+        await ipcManager.init();
 
         this.camera = new Camera(this, this.diceRollLog);
 
@@ -54,8 +52,7 @@ export default class gameScene extends BasicScene {
 
     }
 
-
-
+    
     // ipcLoaded(ipcSprite) {
 
     // }
@@ -68,9 +65,9 @@ export default class gameScene extends BasicScene {
             this.uiManager.hidePopup();
             this.uiManager.showButtons();
 
-            this.ipcManager.addIPC(ipc_id, () => { });
+            IPCManager.getInstance().addIPC(ipc_id, () => { });
 
-            this.ensureFitsScreen(this.ipcManager.getMaxHieght());
+            this.ensureFitsScreen(IPCManager.getInstance().getMaxHeight());
         }
 
     }
@@ -82,10 +79,10 @@ export default class gameScene extends BasicScene {
 
         for (var id in ids) {
             var ipc_id = parseInt(ids[id]);
-            this.ipcManager.addIPC(ipc_id, () => { });
+            IPCManager.getInstance().addIPC(ipc_id, () => { });
         }
 
-        this.ensureFitsScreen(this.ipcManager.getMaxHieght());
+        this.ensureFitsScreen(IPCManager.getInstance().getMaxHeight());
 
     }
 
@@ -115,7 +112,7 @@ export default class gameScene extends BasicScene {
     addUIElements() {
         this.uiManager.createPopup(this.getScreenWidth() / 2, this.getScreenHeight() / 2, this.addIPCtoScene.bind(this), this.addMultipleIPCsToScene.bind(this));
 
-        this.ipcManager.addIpcButton = this.uiManager.createButton(10, 10, 'Add IPC', this.showPopup.bind(this));
+        this.uiManager.addIpcButton = this.uiManager.createButton(10, 10, 'Add IPC', this.showPopup.bind(this));
 
         var buttonStart = this.uiManager.createButton(this.getScreenWidth() - 10, 10, 'Start Race', this.onStartRaceClicked.bind(this), this.onStartRaceQuick.bind(this));
         buttonStart.x -= buttonStart.width;
@@ -143,8 +140,8 @@ export default class gameScene extends BasicScene {
     }
 
     startRace() {
-        this.ipcManager.startRace();
-        this.camera.startFollowIPC(this.ipcManager, this.getScreenWidth(), 4096, this.scaleFactor, this.onRaceFinished.bind(this));
+        IPCManager.getInstance().startRace();
+        this.camera.startFollowIPC(IPCManager.getInstance(), this.getScreenWidth(), 4096, this.scaleFactor, this.onRaceFinished.bind(this));
         this.fastForwardButton.visible = true;
     }
 

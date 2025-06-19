@@ -1,5 +1,6 @@
 import { Container, Sprite, Text, AnimatedSprite, Ticker, Assets, Spritesheet, Texture } from 'pixi.js';
 import { GAME, IPC_CONFIG } from '../config'
+import IPCManager from '../managers/IPCManager'
 
 
 export default class IpcController {
@@ -86,7 +87,7 @@ export default class IpcController {
                 
                 // this.container.removeChild(this.graph);
                 this.view.graph.container.visible = false;
-                GAME.ipcManager.notifyFinished(this);
+                IPCManager.getInstance().notifyFinished(this);
                 this.model.raceCompleted = true;
                 Ticker.shared.add(ipcCelebrate);
             }

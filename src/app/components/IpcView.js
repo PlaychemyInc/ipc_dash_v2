@@ -6,25 +6,25 @@ import SuccessRateGraph from './SuccessRateGraph';
 
 export default class IpcView {
     container;
-    constructor(x, y, model, spritesheetData, onSpriteLoaded, scene){
+    constructor(x, y, model, spritesheetData, onSpriteLoaded, scene) {
 
         this.model = model;
         this.spritesheetData = spritesheetData;
         this.onSpriteLoaded = onSpriteLoaded;
         this.scene = scene;
 
-        this.createContainer(x,y);
+        this.createContainer(x, y);
 
     }
 
-    createContainer(x,y){
+    createContainer(x, y) {
         this.container = new Container();
         this.container.x = x;
         this.container.y = y;
         this.container.sortableChildren = true;
     }
 
-    async onDataLoaded(){
+    async onDataLoaded() {
         await this.loadShadow();
         await this.loadSprite();
         this.loadIdText();
@@ -32,7 +32,7 @@ export default class IpcView {
 
         this.setShadowTransform();
         this.setIdTextTransform();
-        
+
         this.onSpriteLoaded();
     }
 
@@ -59,40 +59,47 @@ export default class IpcView {
 
     }
 
-    async loadShadow(){
+    async loadShadow() {
         var texture = await Assets.load('assets/shadow.png');
         this.shadow = Sprite.from(texture);
         this.container.addChild(this.shadow);
     }
 
-    loadIdText(){
+    loadIdText() {
         this.idText = new Text({ text: '#' + this.model.getID(), fontFamily: "Arial", fontSize: 16, fill: 0xffffff, });
         this.container.addChild(this.idText);
     }
 
-    loadGraph(){
-        var graphConfig = {
-            x: this.sprite.x - ((this.sprite.width- (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) /2),
-            y: this.sprite.y,
-            width : (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale * 2)) * 0.25,
-            height : (this.sprite.height - (IPC_CONFIG.padding.top * 2)) * 0.8
-        };
-        this.graph = new SuccessRateGraph(graphConfig);
+    loadGraph() {
+        
+        this.graph = new SuccessRateGraph(
+            {
+                x: this.sprite.x - ((this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / 2),
+                y: this.sprite.y,
+                width: (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale * 2)) * 0.25,
+                height: (this.sprite.height - (IPC_CONFIG.padding.top * 2)) * 0.8,
+                bgColor: 0x333333,
+                fillColor: 0x00ff00,
+                labelText: '',
+                labelColor: 0xffffff,
+                labelFontSize: 12
+            }
+        );
         this.container.addChild(this.graph.displayObject);
         this.graph.setProgress(this.controller.getSuccessRate());
     }
 
-    setShadowTransform(){
+    setShadowTransform() {
         this.shadowScale = (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / (this.shadow.width);
         this.shadow.scale.set(this.shadowScale);
         this.shadow.anchor.set(0.5, 0);
         this.shadow.y += this.sprite.height / 2 - (IPC_CONFIG.padding.bottom * IPC_CONFIG.sprite_scale);
     }
 
-    setIdTextTransform(){
+    setIdTextTransform() {
         this.idText.style.fontSize = this.sprite.height / 9;
-        this.idText.x = this.sprite.x - ((this.sprite.width- (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) /2),
-        this.idText.y -= (this.sprite.height / 2);
+        this.idText.x = this.sprite.x - ((this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / 2),
+            this.idText.y -= (this.sprite.height / 2);
     }
 
 

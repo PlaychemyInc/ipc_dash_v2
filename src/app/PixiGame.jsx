@@ -6,6 +6,7 @@ import PixiAppManager from './core/PixiAppManager';
 import AssetLoader from './core/AssetLoader';
 
 import SceneManager from './managers/SceneManager';
+
 import InitScene from './scenes/InitScene';
 import gameScene from './scenes/GameScene';
 
