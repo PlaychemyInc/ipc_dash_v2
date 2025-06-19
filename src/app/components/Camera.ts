@@ -38,12 +38,12 @@ export default class Camera {
 
         this.tickerFn = () => {
 
-            const fastestIPC = ipcManager.getFurthestIpc();
+            const fastestIPC = ipcManager.getFurthestIPC();
             if (!fastestIPC) return;
 
             let speed = 0;
             const ipcX = fastestIPC.getX();
-            const ipcWidth = fastestIPC.view.sprite.width / (scaleFactor * 2);
+            const ipcWidth = fastestIPC.getWidth() / (scaleFactor * 2);
 
             if (ipcX + ipcWidth >= this.cameraContainer.pivot.x + maxWidth) {
                 speed = ipcX + ipcWidth - (this.cameraContainer.pivot.x + maxWidth) + GAME.ipc_camera_padding;
@@ -62,7 +62,7 @@ export default class Camera {
 
             }
 
-            if (ipcManager.allIpcsFinished()) {
+            if (ipcManager.allIPCsFinished()) {
                 console.log("Race Finished!");
                 onRaceFinished();
                 this.stopFollow();

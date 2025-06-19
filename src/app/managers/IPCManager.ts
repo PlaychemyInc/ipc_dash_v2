@@ -118,7 +118,7 @@ export default class IPCManager {
     }
 
     public startRace(): void {
-        Object.values(this.ipcArray).forEach(ipc => ipc.controller.startRace());
+        Object.values(this.ipcArray).forEach(ipc => ipc.startRace());
     }
 
     public getFurthestIPC(): IPC | null {
@@ -149,6 +149,18 @@ export default class IPCManager {
 
             GAME.uiManager.createWinPopup(winnerData, this.finishedIPCs.slice(0, 3));
         }
+    }
+
+    public destroyIPCs(): void {
+        // Destroy each IPC
+        Object.values(this.ipcArray).forEach(ipc => {
+            ipc.destroy();
+        });
+
+        // Reset arrays and references
+        this.ipcArray = {};
+        this.finishedIPCs = [];
+
     }
 
     public destroy(): void {

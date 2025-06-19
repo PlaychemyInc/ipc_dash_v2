@@ -56,6 +56,6 @@ export default class PixiGame extends Component {
     }
 
     handleResize = () => {
-        this.sceneManager.updateScreenSize();
+        SceneManager.getInstance().updateScreenSize();
     }
 }

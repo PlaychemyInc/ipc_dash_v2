@@ -2,7 +2,7 @@ import { Container, Graphics, Text, Assets, Sprite, AnimatedSprite, Ticker } fro
 import BasicButton from '../components/BasicButton';
 import InputLabel from '../components/InputLabel';
 import { GAME, IPC_CONFIG } from '../config'
-import SceneManager from '../managers/SceneManager';
+import IPCManager from '../managers/IPCManager';
 
 
 
@@ -35,13 +35,11 @@ export default class WinPopup {
       backgroundColor: 0xff0000,
       hoverColor: 0xff0001,
       fontSize: 20,
-      onClick: () => {this.scene.setScene('init');}
+      onClick: () => {
+        IPCManager.getInstance().destroy();
+        this.scene.setScene('game');
+      }
     });
-
-    // this.closeBtn = new BasicButton('X', 40, 40, () => {
-    //   Ticker.shared.destroy();
-    //   this.scene.setScene('game');
-    // });
 
     // Red color background
     this.closeBtn.drawBackground(0xff0000);
