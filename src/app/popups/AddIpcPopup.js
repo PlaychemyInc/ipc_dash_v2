@@ -130,16 +130,20 @@ export default class AddIpcPopup extends Container {
     this.addChild(this.slider);
 
     // Add button
-    const closeBtn = new BasicButton('Add', 100, 40, () => {
-      const addIPC = this.input.getValue();
-      this.input.setValue('');
-      if (addIPC === "") {
-        this.generateRandomIPCs();
-      }
-      else {
-        onClose(addIPC);
+    const closeBtn = new BasicButton('Add', {
+      width: 100,
+      height: 40,
+      backgroundColor: 0x2288cc,
+      hoverColor: 0x44aaff,
+      fontSize: 20,
+      onClick: () => {
+        const addIPC = this.input.getValue();
+        this.input.setValue('');
+        if (addIPC === "") { this.generateRandomIPCs(); }
+        else { onClose(addIPC); }
       }
     });
+
     closeBtn.x = box.x + 30;
     closeBtn.y = this.slider.y + this.slider.height + 20;
     this.addChild(closeBtn);
@@ -147,7 +151,14 @@ export default class AddIpcPopup extends Container {
     // Generate Random button
 
 
-    const randomBtn = new BasicButton('Generate Random', 160, 40, this.generateRandomIPCs.bind(this));
+    const randomBtn = new BasicButton('Generate Random', {
+      width: 160,
+      height: 40,
+      backgroundColor: 0x2288cc,
+      hoverColor: 0x44aaff,
+      fontSize: 20,
+      onClick: this.generateRandomIPCs.bind(this)
+    });
     randomBtn.x = box.x + 150;
     randomBtn.y = closeBtn.y;
     this.addChild(randomBtn);
