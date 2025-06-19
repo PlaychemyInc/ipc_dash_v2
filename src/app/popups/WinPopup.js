@@ -21,26 +21,35 @@ export default class WinPopup {
     this.container.addChild(this.sprite);
 
     // Add close button
-    // this.createCloseButton();
+    this.createCloseButton();
 
     this.cards = [];
     this.createWinnerGrid(finishedIPCs);
 
   }
 
-  // createCloseButton() {
-  //   this.closeBtn = new BasicButton('X', 40, 40, () => {
-  //     Ticker.shared.destroy();
-  //     this.scene.setScene('game');
-  //   });
+  createCloseButton() {
+    this.closeBtn = new BasicButton('X', {
+      width: 40,
+      height: 40,
+      backgroundColor: 0xff0000,
+      hoverColor: 0xff0001,
+      fontSize: 20,
+      onClick: () => {this.scene.setScene('init');}
+    });
 
-  //   // Red color background
-  //   this.closeBtn.drawBackground(0xff0000);
-  //   this.closeBtn.x = this.sprite.x + 10 + this.sprite.width / 3;
-  //   this.closeBtn.y = this.sprite.y - this.sprite.height / 3;
+    // this.closeBtn = new BasicButton('X', 40, 40, () => {
+    //   Ticker.shared.destroy();
+    //   this.scene.setScene('game');
+    // });
 
-  //   this.container.addChild(this.closeBtn);
-  // }
+    // Red color background
+    this.closeBtn.drawBackground(0xff0000);
+    this.closeBtn.x = this.sprite.x + 10 + this.sprite.width / 3;
+    this.closeBtn.y = this.sprite.y - this.sprite.height / 3;
+
+    this.container.addChild(this.closeBtn);
+  }
 
   createWinnerGrid(finishedIPCs) {
     const cardWidth = this.sprite.width * 0.55 / 3;

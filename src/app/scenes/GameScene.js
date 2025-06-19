@@ -10,7 +10,6 @@ import BasicScene from './BasicScene'
 import IPCManager from '../managers/IPCManager.js';
 
 import RockManager from '../managers/RockManager';
-import DiceRollLog from '../components/DiceRollLog';
 
 export default class gameScene extends BasicScene {
     constructor(game) {
@@ -30,7 +29,6 @@ export default class gameScene extends BasicScene {
 
         //Managers
         this.rockManager = GAME.rocks_enabled ? new RockManager(this) : null;
-        this.diceRollLog = GAME.debug ? new DiceRollLog() : null;
 
         var ipcManagerConfig = {
             scene: this,
@@ -70,21 +68,21 @@ export default class gameScene extends BasicScene {
             this.uiManager.hidePopup();
             this.uiManager.showButtons();
 
-            this.ipcManager.addIPC(ipc_id, () => {});
+            this.ipcManager.addIPC(ipc_id, () => { });
 
             this.ensureFitsScreen(this.ipcManager.getMaxHieght());
         }
 
     }
 
-    async addMultipleIPCsToScene(ids){
+    async addMultipleIPCsToScene(ids) {
 
         this.uiManager.hidePopup();
         this.uiManager.showButtons();
 
-        for(var id in ids){
+        for (var id in ids) {
             var ipc_id = parseInt(ids[id]);
-            this.ipcManager.addIPC(ipc_id, () => {});
+            this.ipcManager.addIPC(ipc_id, () => { });
         }
 
         this.ensureFitsScreen(this.ipcManager.getMaxHieght());
@@ -139,7 +137,7 @@ export default class gameScene extends BasicScene {
         this.uiManager.startRaceClicked(this.startRace.bind(this));
     }
 
-    onStartRaceQuick(){
+    onStartRaceQuick() {
         this.uiManager.hideButtons();
         this.startRace();
     }

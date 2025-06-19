@@ -2,20 +2,17 @@ import { Container, Ticker } from 'pixi.js';
 import { IPC_CONFIG, GAME } from '../config'
 
 import IPCManager from '../managers/IPCManager';
-import DiceRollLog from './DiceRollLog';
 import GameScene from '../scenes/GameScene';
 
 export default class Camera {
 
     private cameraContainer: Container;
     private scene: GameScene;
-    private diceRollLog: DiceRollLog | null;
     private moveWithCamera: Container[] = [];
     private tickerFn: (() => void) | null = null;
 
     constructor(gameScene, diceRollLog) {
         this.scene = gameScene;
-        this.diceRollLog = diceRollLog;
         this.cameraContainer = this.scene.container;
 
         // this.camera = gameScene.scene;
@@ -63,9 +60,8 @@ export default class Camera {
                     this.cameraContainer.pivot.x = finalX - maxWidth;
                 }
 
-                this.diceRollLog?.updateX(this.cameraContainer.pivot.x);
             }
-            
+
             if (ipcManager.allIpcsFinished()) {
                 console.log("Race Finished!");
                 onRaceFinished();
