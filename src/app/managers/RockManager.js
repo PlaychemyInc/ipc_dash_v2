@@ -1,5 +1,5 @@
 import Rock from '../components/Rock';
-import {Ticker} from 'pixi.js';
+import { Ticker } from 'pixi.js';
 
 const RockCount = 10;
 
@@ -17,7 +17,7 @@ export default class RockManager {
         this.rocks[ipc.model.getID()] = [];
         for (let i = 0; i < RockCount; i++) {
             const x = lastX + spacing + Math.random() * 200; // staggered, randomized spacing
-            var rock = new Rock(this, ipc.model.getID(),  x, ipc.y, this.assetLoaded.bind(this));
+            var rock = new Rock(this, ipc.model.getID(), x, ipc.y, this.assetLoaded.bind(this));
             this.rocks[ipc.model.getID()].push(rock);
             lastX = x;
         }
@@ -49,6 +49,10 @@ export default class RockManager {
         Ticker.shared.add(rockCollison);
     }
 
+    destroy() {
+        throw new Error('Method not implemented.');
+    }
+
 }
 
 function isCollidingX(spriteA, spriteB) {
@@ -57,7 +61,7 @@ function isCollidingX(spriteA, spriteB) {
 
     return (
         boundsA.x < boundsB.x + boundsB.width &&
-        boundsA.x + boundsA.width > boundsB.x 
+        boundsA.x + boundsA.width > boundsB.x
     );
 }
 

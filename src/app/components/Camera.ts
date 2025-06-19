@@ -15,11 +15,6 @@ export default class Camera {
         this.scene = gameScene;
         this.cameraContainer = this.scene.container;
 
-        // this.camera = gameScene.scene;
-        // this.diceRollLog = diceRollLog;
-
-        // this.moveWithCamera = [];
-
         // Ensure pivot starts at (0,0)
         this.cameraContainer.pivot.set(0, 0);
     }
@@ -63,7 +58,7 @@ export default class Camera {
             }
 
             if (ipcManager.allIPCsFinished()) {
-                console.log("Race Finished!");
+                // console.log("Race Finished!");
                 onRaceFinished();
                 this.stopFollow();
             }
@@ -82,6 +77,23 @@ export default class Camera {
 
     public addToMoveWithCamera(obj: Container): void {
         this.moveWithCamera.push(obj);
+    }
+
+    destroy() {
+        // Remove ticker if set
+        if (this.tickerFn) {
+            Ticker.shared.remove(this.tickerFn);
+            this.tickerFn = null;
+        }
+
+        // Clear moveWithCamera references
+        this.moveWithCamera = [];
+
+        // Destroy camera container if needed
+        this.cameraContainer.destroy({ children: true });
+
+        // Clear scene reference (optional, helps GC)
+        (this.scene as any) = null;
     }
 
 }

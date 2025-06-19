@@ -8,6 +8,7 @@ import WinPopup from '../popups/WinPopup'
 
 
 export default class UIManager {
+
     constructor(scene) {
         this.container = new Container();
         this.scene = scene;
@@ -156,5 +157,9 @@ export default class UIManager {
 
     get displayObject() {
         return this.container;
+    }
+
+        destroy() {
+        throw new Error('Method not implemented.');
     }
 }
