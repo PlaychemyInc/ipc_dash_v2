@@ -1,79 +1,8 @@
 import { Container, Graphics, Text } from 'pixi.js';
 import BasicButton from '../components/BasicButton';
 import InputLabel from '../components/InputLabel';
+import SimpleSlider from '../components/SimpleSlider';
 
-class SimpleSlider extends Container {
-  constructor(min, max, initialValue, onChange) {
-    super();
-
-    this.min = min;
-    this.max = max;
-    this.value = initialValue;
-    this.onChange = onChange;
-
-    const width = 200;
-    const height = 4;
-    const knobRadius = 10;
-
-    // Track
-    const track = new Graphics()
-      .beginFill(0xaaaaaa)
-      .drawRect(0, 0, width, height)
-      .endFill();
-    this.addChild(track);
-
-    // Knob
-    this.knob = new Graphics()
-      .beginFill(0x333333)
-      .drawCircle(0, 0, knobRadius)
-      .endFill();
-    this.knob.y = height / 2;
-    this.addChild(this.knob);
-
-    // Value label
-    this.valueText = new Text(`${initialValue}`, { fontSize: 16, fill: 0x000000 });
-    this.valueText.x = width + 20;
-    this.valueText.y = -10;
-    this.addChild(this.valueText);
-
-    this.knob.interactive = true;
-    this.knob.buttonMode = true;
-
-    // Handle dragging
-    this.knob
-      .on('pointerdown', (event) => {
-        this.dragging = true;
-        this.dragData = event.data;
-      })
-      .on('pointerup', () => { this.dragging = false; })
-      .on('pointerupoutside', () => { this.dragging = false; })
-      .on('pointermove', () => {
-        if (this.dragging) {
-          const newPos = this.dragData.getLocalPosition(this);
-          let clampedX = Math.max(0, Math.min(newPos.x, width));
-          this.knob.x = clampedX;
-          this.value = Math.round(this.min + (clampedX / width) * (this.max - this.min));
-          this.valueText.text = `${this.value}`;
-          if (this.onChange) this.onChange(this.value);
-        }
-      });
-
-    // Initialize knob position
-    this.setValue(initialValue);
-  }
-
-  setValue(val) {
-    this.value = val;
-    const width = 200;
-    const relativeX = ((val - this.min) / (this.max - this.min)) * width;
-    this.knob.x = relativeX;
-    this.valueText.text = `${val}`;
-  }
-
-  getValue() {
-    return this.value;
-  }
-}
 
 export default class AddIpcPopup extends Container {
   constructor(x, y, onClose = () => { }, onGenerateRandom = () => { }) {
@@ -93,11 +22,11 @@ export default class AddIpcPopup extends Container {
     box.y = y - (bg_height / 2);
     this.addChild(box);
 
-    const text = new Text("ADD IPCs", {
+    const text = new Text('Add New IPCs to the Race', {
       fill: 0x000000,
-      fontSize: 18,
-      wordWrap: true,
-      wordWrapWidth: bg_width - 40,
+      fontSize: 16,
+      // wordWrap: true,
+      // wordWrapWidth: bg_width - 40,
     });
     text.x = box.x + bg_width / 2 - text.width / 2;
     text.y = box.y + 30;
@@ -106,31 +35,32 @@ export default class AddIpcPopup extends Container {
     // Manual IPC input
     this.input = new InputLabel({
       label: '',
-      placeholder: 'IPC ID',
-      x: box.x + 10,
+      placeholder: 'Enter IPC ID',
+      x: box.x + bg_width / 2,
       y: text.y + 20,
     });
+    this.input.x -= this.input.width / 2;
     this.addChild(this.input);
 
     // Slider label
-    const sliderLabel = new Text("Random Count:", {
+    const sliderLabel = new Text("Number of Random IPCs:", {
       fontSize: 16,
       fill: 0x000000
     });
-    sliderLabel.x = box.x + 30;
-    sliderLabel.y = this.input.y + this.input.height + 20;
+    sliderLabel.x = box.x + bg_width / 2 - sliderLabel.width / 2;
+    sliderLabel.y = this.input.y + this.input.height + 40;
     this.addChild(sliderLabel);
 
     // Slider
     this.slider = new SimpleSlider(1, 23, Math.floor(Math.random() * 23), (val) => {
       // live update if needed
     });
-    this.slider.x = box.x + 30;
+    this.slider.x = box.x + bg_width / 2 - this.slider.width / 2;
     this.slider.y = sliderLabel.y + sliderLabel.height + 20;
     this.addChild(this.slider);
 
     // Add button
-    const closeBtn = new BasicButton('Add', {
+    const closeBtn = new BasicButton('Add IPC', {
       width: 100,
       height: 40,
       backgroundColor: 0x2288cc,
@@ -138,40 +68,33 @@ export default class AddIpcPopup extends Container {
       fontSize: 20,
       onClick: () => {
         const addIPC = this.input.getValue();
-        this.input.setValue('');
-        if (addIPC === "") { this.generateRandomIPCs(); }
-        else { onClose(addIPC); }
+
+        var count = this.slider.getValue();
+        const uniqueValues = new Set([]);
+
+        if (addIPC !== "") {
+          uniqueValues.add(addIPC);
+          count++;
+        }
+
+        while (uniqueValues.size < count) {
+          const randomIPC = 1 + Math.floor(Math.random() * 11999);
+          uniqueValues.add(randomIPC); // Set automatically handles uniqueness
+        }
+
+        this.onGenerateRandom(Array.from(uniqueValues));
+
       }
     });
 
-    closeBtn.x = box.x + 30;
+    closeBtn.x = box.x + bg_width / 2 - closeBtn.width / 2;
     closeBtn.y = this.slider.y + this.slider.height + 20;
     this.addChild(closeBtn);
 
-    // Generate Random button
-
-
-    const randomBtn = new BasicButton('Generate Random', {
-      width: 160,
-      height: 40,
-      backgroundColor: 0x2288cc,
-      hoverColor: 0x44aaff,
-      fontSize: 20,
-      onClick: this.generateRandomIPCs.bind(this)
-    });
-    randomBtn.x = box.x + 150;
-    randomBtn.y = closeBtn.y;
-    this.addChild(randomBtn);
   }
 
-  generateRandomIPCs() {
-    const count = this.slider.getValue();
-    const randomValues = [];
-    for (let i = 0; i < count; i++) {
-      const randomIPC = 1 + (Math.floor(Math.random() * 11999));
-      randomValues.push(randomIPC);
-    }
-    this.onGenerateRandom(randomValues);
+  generateRandomIPCs(IPC_ID) {
+
 
   }
 }
