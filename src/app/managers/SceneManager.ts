@@ -1,6 +1,6 @@
 import { Application, Container } from 'pixi.js';
 import TransitionOverlay from '../components/TransitionOverlay';
-import { Scene } from '../types/Scene'; // We’ll define this type
+import Scene from '../scenes/BasicScene';
 
 type SceneConstructor = (game: any) => Promise<Scene> | Scene;
 
