@@ -1,18 +1,16 @@
 import { Container, Sprite } from 'pixi.js';
-import { GAME, IPC_CONFIG } from '../config';
+import { GameConfig } from '../config';
 import BasicScene from './BasicScene';
 import Camera from '../components/Camera';
 import UIManager from '../managers/UIManager';
 import IPCManager from '../managers/IPCManager';
 import RockManager from '../managers/RockManager';
 import BackgroundManager from '../managers/BackgroundManager';
-import GameControls from '../components/GameControls';
 import { FancyButton } from '@pixi/ui';
 
 export default class GameScene extends BasicScene {
     private backgroundManager!: BackgroundManager;
     private camera!: Camera;
-    // private controls!: GameControls;
     private rockManager!: RockManager | null;
     private fastForwardButton!: FancyButton;
     scaleFactor: number;
@@ -20,29 +18,26 @@ export default class GameScene extends BasicScene {
     constructor(game: any) {
         super(game, 'game-scene');
         this.scaleFactor = 1;
-        IPC_CONFIG.base_speed = 1;
-        GAME.ipc_start = { x: 100, y: 600 };
+        GameConfig.base_speed = 1;
+        GameConfig.ipc_start = { x: 100, y: 600 };
     }
 
     public async onLoadComplete(): Promise<void> {
         this.backgroundManager = new BackgroundManager(this, this.assets);
 
-        this.rockManager = GAME.rocks_enabled ? new RockManager(this) : null;
+        this.rockManager = GameConfig.rocks_enabled ? new RockManager(this) : null;
 
         const ipcManager = IPCManager.getInstance({
             scene: this,
             rockManager: this.rockManager,
-            // diceRollLog: this.diceRollLog
         });
         await ipcManager.init();
 
         Camera.init(this);
 
         UIManager.init(this);
-        // GAME.uiManager = this.uiManager;
 
         this.add(UIManager.getInstance().displayObject);
-        // this.controls = new GameControls(this, UIManager.getInstance());
 
         UIManager.getInstance().createAddIPCPopup(this.addMultipleIPCsToScene.bind(this));
 
@@ -121,7 +116,7 @@ export default class GameScene extends BasicScene {
     }
 
     increaseSpeed() {
-        IPC_CONFIG.base_speed += 1;
+        GameConfig.base_speed += 1;
     }
 
     onRaceFinished() {
@@ -132,7 +127,6 @@ export default class GameScene extends BasicScene {
         // IPCManager.getInstance().destroy();
         UIManager.getInstance().destroy();
         this.backgroundManager.destroy();
-        // this.controls.destroy();
         this.rockManager?.destroy?.();
         Camera.getInstance().destroy();
         // super.destroy();

@@ -1,5 +1,5 @@
 import { Ticker } from 'pixi.js';
-import { IPC_CONFIG } from '../config';
+import { GameConfig } from '../config';
 import IPCManager from '../managers/IPCManager';
 import IpcView from './IpcView';
 import IpcModel from './IpcModel';
@@ -57,7 +57,7 @@ export default class IpcController {
                     this.diceRollLog?.addLine(`IPC ${this.model.getID()} rolled ${roll + speed}`);
 
                     if (roll > 50 || (this.model.points > 0 && --this.model.points >= 0)) {
-                        this.view.container.x += IPC_CONFIG.base_speed;
+                        this.view.container.x += GameConfig.base_speed;
                         this.successRolls++;
                     }
 

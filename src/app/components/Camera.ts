@@ -1,5 +1,5 @@
 import { Container, Ticker } from 'pixi.js';
-import { GAME } from '../config'
+import { GameConfig } from '../config'
 
 import IPCManager from '../managers/IPCManager';
 import GameScene from '../scenes/GameScene';
@@ -65,7 +65,7 @@ export default class Camera {
             const ipcWidth = fastestIPC.getWidth() / (scaleFactor * 2);
 
             if (ipcX + ipcWidth >= this.cameraContainer.pivot.x + maxWidth) {
-                speed = ipcX + ipcWidth - (this.cameraContainer.pivot.x + maxWidth) + GAME.ipc_camera_padding;
+                speed = ipcX + ipcWidth - (this.cameraContainer.pivot.x + maxWidth) + GameConfig.ipc_camera_padding;
             }
 
             if (this.cameraContainer.pivot.x + maxWidth < finalX) {

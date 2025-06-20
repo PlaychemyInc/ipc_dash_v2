@@ -1,6 +1,6 @@
 import { Container, Sprite, Text, AnimatedSprite, Assets, Spritesheet, Texture } from 'pixi.js';
 import SuccessRateGraph from './SuccessRateGraph';
-import { IPC_CONFIG } from '../config';
+import { GameConfig } from '../config';
 import IpcModel from './IpcModel';
 import IpcController from './IpcController';
 
@@ -44,7 +44,7 @@ export default class IpcView {
 
         this.sprite = new AnimatedSprite(this.spritesheet.animations.ipc);
         this.sprite.anchor.set(0.5);
-        this.sprite.scale.set(IPC_CONFIG.sprite_scale);
+        this.sprite.scale.set(GameConfig.sprite_scale);
         this.sprite.play();
         this.sprite.animationSpeed = 0.5;
 
@@ -75,10 +75,10 @@ export default class IpcView {
 
     private loadGraph(): void {
         this.graph = new SuccessRateGraph({
-            x: this.sprite.x - ((this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / 2),
+            x: this.sprite.x - ((this.sprite.width - (GameConfig.padding.left * GameConfig.sprite_scale)) / 2),
             y: this.sprite.y,
-            width: (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale * 2)) * 0.25,
-            height: (this.sprite.height - (IPC_CONFIG.padding.top * 2)) * 0.8,
+            width: (this.sprite.width - (GameConfig.padding.left * GameConfig.sprite_scale * 2)) * 0.25,
+            height: (this.sprite.height - (GameConfig.padding.top * 2)) * 0.8,
             bgColor: 0x333333,
             fillColor: 0x00ff00
         });
@@ -86,15 +86,15 @@ export default class IpcView {
     }
 
     private setShadowTransform(): void {
-        var shadowScale = (this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / (this.shadow.width);
+        var shadowScale = (this.sprite.width - (GameConfig.padding.left * GameConfig.sprite_scale)) / (this.shadow.width);
         this.shadow.scale.set(shadowScale);
         this.shadow.anchor.set(0.5, 0);
-        this.shadow.y += this.sprite.height / 2 - (IPC_CONFIG.padding.bottom * IPC_CONFIG.sprite_scale);
+        this.shadow.y += this.sprite.height / 2 - (GameConfig.padding.bottom * GameConfig.sprite_scale);
     }
 
     private setIdTextTransform(): void {
         this.idText.style.fontSize = this.sprite.height / 9;
-        this.idText.x = this.sprite.x - ((this.sprite.width - (IPC_CONFIG.padding.left * IPC_CONFIG.sprite_scale)) / 2),
+        this.idText.x = this.sprite.x - ((this.sprite.width - (GameConfig.padding.left * GameConfig.sprite_scale)) / 2),
             this.idText.y -= (this.sprite.height / 2);
     }
 

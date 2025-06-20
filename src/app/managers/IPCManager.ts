@@ -1,5 +1,5 @@
 import { AnimatedSprite, Assets } from 'pixi.js';
-import { GAME } from '../config';
+import { GameConfig } from '../config';
 import IPC from '../components/IPC';
 import UIManager from './UIManager';
 
@@ -18,7 +18,7 @@ export default class IPCManager {
     private scene!: any;
     private rockManager?: any;
     private diceRollLog?: any;
-    private ipcStart = { ...GAME.ipc_start };
+    private ipcStart = { ...GameConfig.ipc_start };
     private ipcArray: Record<number, IPC> = {};
     private finishedIPCs: any[] = [];
     private ipcSheetData: any;
@@ -46,7 +46,7 @@ export default class IPCManager {
         this.scene = config.scene;
         this.rockManager = config.rockManager;
         this.diceRollLog = config.diceRollLog;
-        this.ipcStart = { ...GAME.ipc_start };
+        this.ipcStart = { ...GameConfig.ipc_start };
     }
 
     public async init(): Promise<void> {

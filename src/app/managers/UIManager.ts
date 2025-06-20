@@ -2,7 +2,7 @@ import { Container, Sprite } from 'pixi.js';
 import AddIpcPopup from '../popups/AddIpcPopup';
 import { FancyButton } from '@pixi/ui';
 import CountdownPopup from '../popups/CountdownPopup';
-// import { GAME } from '../config';
+
 import WinPopup from '../popups/WinPopup'
 import IPC from '../components/IPC';
 

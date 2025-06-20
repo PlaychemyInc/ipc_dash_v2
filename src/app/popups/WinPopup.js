@@ -1,7 +1,7 @@
 import { Container, Graphics, Text, Assets, Sprite, AnimatedSprite, Ticker } from 'pixi.js';
 import BasicButton from '../components/BasicButton';
 import InputLabel from '../components/InputLabel';
-import { GAME, IPC_CONFIG } from '../config'
+import { GameConfig } from '../config'
 import IPCManager from '../managers/IPCManager';
 
 
@@ -122,12 +122,6 @@ export default class WinPopup {
       case 2: return '🥉';
       default: return `${rank}`;
     }
-  }
-
-  updateData() {
-    var winners = GAME.ipcManager.finishedIPCs;
-
-
   }
 
   setVisibility(flag) {
