@@ -1,7 +1,12 @@
 import { Container } from 'pixi.js';
 import AssetLoader from '../core/AssetLoader';
 import SceneManager from '../managers/SceneManager';
-import { Scene } from '../types/Scene';
+
+export interface Scene {
+    container: Container;
+    updateScreenSize?: () => void;
+    destroy?: () => void;
+}
 
 export default class BasicScene {
   public container: Container;
