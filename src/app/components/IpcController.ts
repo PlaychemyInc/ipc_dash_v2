@@ -49,7 +49,7 @@ export default class IpcController {
         };
         
         const moveIPC = (ticker: any): void => {
-            if (this.view.container.x < 4020) {
+            if (this.view.container.x < GameConfig.win_x) {
                 if (!this.pauseMove) {
                     this.totalRolls++;
                     const roll = Math.random() * 100;
@@ -64,8 +64,8 @@ export default class IpcController {
                     this.view.updateGraph(this.getSuccessRate());
                 }
 
-                if (this.view.container.x > 4020) {
-                    this.view.container.x = 4020;
+                if (this.view.container.x > GameConfig.win_x) {
+                    this.view.container.x = GameConfig.win_x;
                 }
             } else {
                 this.endRace(moveIPC, ipcCelebrate);

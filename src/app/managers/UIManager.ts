@@ -24,6 +24,7 @@ export default class UIManager {
     private constructor(scene: any) {
         this.scene = scene;
         this.container = new Container();
+        this.container.zIndex = 1000;
 
         const screenWidth = this.scene.getScreenWidth();
         const screenHeight = this.scene.getScreenHeight();

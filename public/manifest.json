@@ -14,6 +14,7 @@
                 { "alias": "topItems", "src": "assets/map/topItems.png" },
                 { "alias": "trees", "src": "assets/map/trees.png" },
                 { "alias": "water", "src": "assets/map/water.png" },
+                { "alias": "finalLine", "src": "assets/map/finalLine.png" },
                 { "alias": "input", "src": "assets/input.png" },
                 { "alias": "portal", "src": "assets/Portal.png" },
                 { "alias": "button", "src": "assets/UI/button.png" },

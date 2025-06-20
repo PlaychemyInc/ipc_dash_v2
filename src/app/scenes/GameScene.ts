@@ -20,10 +20,11 @@ export default class GameScene extends BasicScene {
         this.scaleFactor = 1;
         GameConfig.base_speed = 1;
         GameConfig.ipc_start = { x: 100, y: 600 };
+        GameConfig.win_x = 4020;
     }
 
     public async onLoadComplete(): Promise<void> {
-        this.backgroundManager = new BackgroundManager(this, this.assets);
+
 
         this.rockManager = GameConfig.rocks_enabled ? new RockManager(this) : null;
 
@@ -34,6 +35,8 @@ export default class GameScene extends BasicScene {
         await ipcManager.init();
 
         Camera.init(this);
+        this.backgroundManager = new BackgroundManager(this, this.assets);
+
 
         UIManager.init(this);
 
@@ -100,6 +103,9 @@ export default class GameScene extends BasicScene {
             this.container.position.set(0, 0);
             //fix ui layer
             UIManager.getInstance().displayObject.scale.set(1 / this.scaleFactor);
+
+            // Ensure backgrounds fill screen at new scale
+            this.backgroundManager.ensureBackgroundFillsScreen(this.getScreenWidth() / this.scaleFactor, this.getScreenHeight() / this.scaleFactor);
         }
     }
 
