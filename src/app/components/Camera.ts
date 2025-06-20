@@ -1,21 +1,47 @@
 import { Container, Ticker } from 'pixi.js';
-import { IPC_CONFIG, GAME } from '../config'
+import { GAME } from '../config'
 
 import IPCManager from '../managers/IPCManager';
 import GameScene from '../scenes/GameScene';
 
 export default class Camera {
 
+    private static _instance: Camera | null = null;
     private cameraContainer: Container;
     private scene: GameScene;
     private moveWithCamera: Container[] = [];
     private tickerFn: (() => void) | null = null;
 
-    constructor(gameScene, diceRollLog) {
-        this.scene = gameScene;
-        this.cameraContainer = this.scene.container;
+    private constructor() {
+        // private to prevent direct instantiation
+    }
 
-        // Ensure pivot starts at (0,0)
+    /**
+    * Initialize the singleton instance.
+    * Must be called once before getInstance() can be used.
+    */
+    public static init(scene: GameScene): Camera {
+        if (!Camera._instance) {
+            Camera._instance = new Camera();
+            Camera._instance.setup(scene);
+        }
+        return Camera._instance;
+    }
+
+    /**
+     * Get the singleton instance.
+     * Make sure init() has been called first.
+     */
+    public static getInstance(): Camera {
+        if (!Camera._instance) {
+            throw new Error("Camera has not been initialized. Call Camera.init(scene) first.");
+        }
+        return Camera._instance;
+    }
+
+    private setup(scene: GameScene): void {
+        this.scene = scene;
+        this.cameraContainer = this.scene.container;
         this.cameraContainer.pivot.set(0, 0);
     }
 
@@ -28,8 +54,6 @@ export default class Camera {
     ): void {
 
         maxWidth /= scaleFactor;
-        // var speed = 0;
-        // const camera = this.camera;
 
         this.tickerFn = () => {
 
@@ -58,13 +82,11 @@ export default class Camera {
             }
 
             if (ipcManager.allIPCsFinished()) {
-                // console.log("Race Finished!");
                 onRaceFinished();
                 this.stopFollow();
             }
         };
 
-        // Start the movement
         Ticker.shared.add(this.tickerFn);
     }
 
@@ -94,6 +116,8 @@ export default class Camera {
 
         // Clear scene reference (optional, helps GC)
         (this.scene as any) = null;
+
+        Camera._instance = null;
     }
 
 }

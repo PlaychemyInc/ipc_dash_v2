@@ -1,12 +1,12 @@
+import Camera from "./Camera";
+
 export default class GameControls {
     private scene: any;
     private uiManager: any;
-    private camera: any;
 
-    constructor(scene: any, uiManager: any, camera: any) {
+    constructor(scene: any, uiManager: any) {
         this.scene = scene;
         this.uiManager = uiManager;
-        this.camera = camera;
 
         this.setupControls();
     }
@@ -38,7 +38,7 @@ export default class GameControls {
         this.scene.fastForwardButton.x -= this.scene.fastForwardButton.width;
         this.scene.fastForwardButton.visible = false;
 
-        this.camera.addToMoveWithCamera(this.uiManager.displayObject);
+        Camera.getInstance().addToMoveWithCamera(this.uiManager.displayObject);
     }
 
     public destroy(): void {

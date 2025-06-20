@@ -36,13 +36,13 @@ export default class GameScene extends BasicScene {
         });
         await ipcManager.init();
 
-        this.camera = new Camera(this, null);
+        Camera.init(this);
 
         this.uiManager = new UIManager(this);
         GAME.uiManager = this.uiManager;
 
         this.add(this.uiManager.displayObject);
-        this.controls = new GameControls(this, this.uiManager, this.camera);
+        this.controls = new GameControls(this, this.uiManager);
 
         this.uiManager.hideButtons();
 
@@ -51,7 +51,7 @@ export default class GameScene extends BasicScene {
         // }
     }
 
-    async addIPCtoScene(id) {
+    async addIPCtoScene(id: string) {
 
         var ipc_id = parseInt(id);
         if (ipc_id >= 1 && ipc_id <= 12000) {
@@ -104,7 +104,7 @@ export default class GameScene extends BasicScene {
 
     startRace() {
         IPCManager.getInstance().startRace();
-        this.camera.startFollowIPC(IPCManager.getInstance(), this.getScreenWidth(), 4096, this.scaleFactor, this.onRaceFinished.bind(this));
+        Camera.getInstance().startFollowIPC(IPCManager.getInstance(), this.getScreenWidth(), 4096, this.scaleFactor, this.onRaceFinished.bind(this));
         this.fastForwardButton.visible = true;
     }
 
@@ -127,7 +127,7 @@ export default class GameScene extends BasicScene {
         this.backgroundManager.destroy();
         this.controls.destroy();
         this.rockManager?.destroy?.();
-        this.camera?.destroy?.();
+        Camera.getInstance().destroy();
         // super.destroy();
     }
 
