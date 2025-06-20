@@ -5,7 +5,11 @@ import SimpleSlider from '../components/SimpleSlider';
 
 
 export default class AddIpcPopup extends Container {
-  constructor(x, y, onClose = () => { }, onGenerateRandom = () => { }) {
+  private input: InputLabel;
+  private slider: SimpleSlider;
+  private onGenerateRandom: (ids: number[]) => void;
+
+  constructor(x: number, y: number, onGenerateRandom = (ids: number[]) => void {}) {
     super();
 
     var bg_width = 350;
@@ -93,8 +97,22 @@ export default class AddIpcPopup extends Container {
 
   }
 
-  generateRandomIPCs(IPC_ID) {
+  private handleAddClick(): void {
+    const addIPC = this.input.getValue();
+    let count = this.slider.getValue();
+    const uniqueValues = new Set([]);
 
+    if (addIPC !== "") {
+      uniqueValues.add(Number(addIPC));
+      count++;
+    }
 
+    while (uniqueValues.size < count) {
+      const randomIPC = 1 + Math.floor(Math.random() * 11999);
+      uniqueValues.add(randomIPC);
+    }
+
+    this.onGenerateRandom(Array.from(uniqueValues));
   }
+
 }

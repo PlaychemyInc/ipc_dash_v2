@@ -1,6 +1,7 @@
 import { AnimatedSprite, Assets } from 'pixi.js';
 import { GAME } from '../config';
 import IPC from '../components/IPC';
+import UIManager from './UIManager';
 
 const IPC_SPRITE_SHEET_PATH = 'assets/IpcSpriteSheet.json';
 const PORTAL_SPRITE_SHEET_PATH = 'assets/PortalSpriteSheet.json';
@@ -86,8 +87,8 @@ export default class IPCManager {
         this.ipcArray[ipcId] = newIPC;
         this.ipcStart.y += 150;
 
-        if (this.ipcStart.y > 4096 && GAME.uiManager?.addIpcButton) {
-            GAME.uiManager.addIpcButton.visible = false;
+        if (this.ipcStart.y > 4096) {
+            UIManager.getInstance().hideAddIpcButton();
         }
     }
 
@@ -147,7 +148,7 @@ export default class IPCManager {
                 successRate: 90 - index * 7
             }));
 
-            GAME.uiManager.createWinPopup(winnerData, this.finishedIPCs.slice(0, 3));
+            UIManager.getInstance().createWinPopup(this.finishedIPCs.slice(0, 3));
         }
     }
 

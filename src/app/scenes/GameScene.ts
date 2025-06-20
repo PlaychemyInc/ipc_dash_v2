@@ -7,14 +7,14 @@ import IPCManager from '../managers/IPCManager';
 import RockManager from '../managers/RockManager';
 import BackgroundManager from '../managers/BackgroundManager';
 import GameControls from '../components/GameControls';
+import { FancyButton } from '@pixi/ui';
 
 export default class GameScene extends BasicScene {
     private backgroundManager!: BackgroundManager;
     private camera!: Camera;
-    private uiManager!: UIManager;
-    private controls!: GameControls;
+    // private controls!: GameControls;
     private rockManager!: RockManager | null;
-    private fastForwardButton!: Sprite;
+    private fastForwardButton!: FancyButton;
     scaleFactor: number;
 
     constructor(game: any) {
@@ -38,13 +38,29 @@ export default class GameScene extends BasicScene {
 
         Camera.init(this);
 
-        this.uiManager = new UIManager(this);
-        GAME.uiManager = this.uiManager;
+        UIManager.init(this);
+        // GAME.uiManager = this.uiManager;
 
-        this.add(this.uiManager.displayObject);
-        this.controls = new GameControls(this, this.uiManager);
+        this.add(UIManager.getInstance().displayObject);
+        // this.controls = new GameControls(this, UIManager.getInstance());
 
-        this.uiManager.hideButtons();
+        UIManager.getInstance().createAddIPCPopup(this.addMultipleIPCsToScene.bind(this));
+
+        const buttonStart = UIManager.getInstance().createStartRaceButton(this.getScreenWidth() - 10, 10, 'Start Race', this.onStartRaceClicked.bind(this), this.onStartRaceQuick.bind(this));
+        buttonStart.x -= buttonStart.width;
+
+
+        this.fastForwardButton = UIManager.getInstance().createFastForwardButton(
+            this.getScreenWidth() - 10,
+            10,
+            this.increaseSpeed.bind(this)
+        );
+        this.fastForwardButton.x -= this.fastForwardButton.width;
+        this.fastForwardButton.visible = false;
+
+        Camera.getInstance().addToMoveWithCamera(UIManager.getInstance().displayObject);
+
+        UIManager.getInstance().hideButtons();
 
         // if (this.diceRollLog) {
         //     this.add(this.diceRollLog.displayObject);
@@ -56,8 +72,8 @@ export default class GameScene extends BasicScene {
         var ipc_id = parseInt(id);
         if (ipc_id >= 1 && ipc_id <= 12000) {
 
-            this.uiManager.hidePopup();
-            this.uiManager.showButtons();
+            UIManager.getInstance().hidePopup();
+            UIManager.getInstance().showButtons();
 
             IPCManager.getInstance().addIPC(ipc_id);
 
@@ -68,8 +84,8 @@ export default class GameScene extends BasicScene {
 
     async addMultipleIPCsToScene(ids) {
 
-        this.uiManager.hidePopup();
-        this.uiManager.showButtons();
+        UIManager.getInstance().hidePopup();
+        UIManager.getInstance().showButtons();
 
         for (var id in ids) {
             var ipc_id = parseInt(ids[id]);
@@ -80,12 +96,6 @@ export default class GameScene extends BasicScene {
 
     }
 
-    showPopup() {
-        // this.popup.visible = true;
-        this.uiManager.hideButtons();
-        this.uiManager.showPopup();
-    }
-
     ensureFitsScreen(y) {
         if (y > this.getScreenHeight()) {
             // Calculate scale factor to fit y into screen height
@@ -94,23 +104,20 @@ export default class GameScene extends BasicScene {
             // Optionally, you might want to reposition container too
             this.container.position.set(0, 0);
             //fix ui layer
-            this.uiManager.displayObject.scale.set(1 / this.scaleFactor);
+            UIManager.getInstance().displayObject.scale.set(1 / this.scaleFactor);
         }
     }
 
     onStartRaceClicked() {
-        this.uiManager.startRaceClicked(this.startRace.bind(this));
-    }
-
-    startRace() {
         IPCManager.getInstance().startRace();
         Camera.getInstance().startFollowIPC(IPCManager.getInstance(), this.getScreenWidth(), 4096, this.scaleFactor, this.onRaceFinished.bind(this));
         this.fastForwardButton.visible = true;
     }
 
+
     onStartRaceQuick() {
-        this.uiManager.hideButtons();
-        this.startRace();
+        UIManager.getInstance().hideButtons();
+        this.onStartRaceClicked();
     }
 
     increaseSpeed() {
@@ -123,9 +130,9 @@ export default class GameScene extends BasicScene {
 
     public destroy(): void {
         // IPCManager.getInstance().destroy();
-        // this.uiManager.destroy();
+        UIManager.getInstance().destroy();
         this.backgroundManager.destroy();
-        this.controls.destroy();
+        // this.controls.destroy();
         this.rockManager?.destroy?.();
         Camera.getInstance().destroy();
         // super.destroy();

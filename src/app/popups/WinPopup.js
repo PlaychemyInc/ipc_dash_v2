@@ -7,7 +7,8 @@ import IPCManager from '../managers/IPCManager';
 
 
 export default class WinPopup {
-  constructor(scene, x, y, winner, finishedIPCs) {
+
+  constructor(scene, x, y, finishedIPCs) {
 
     this.scene = scene;
 
@@ -135,6 +136,10 @@ export default class WinPopup {
 
   get displayObject() {
     return this.container;
+  }
+
+  destroy() {
+    this.container.destroy({ children: true });
   }
 
 }

@@ -1,6 +1,7 @@
 import { AnimatedSprite, Assets } from 'pixi.js';
 
 export default class CountdownPopup{
+    
     constructor(x, y, onLoadComplete){
         this.x = x;
         this.y = y;
@@ -40,5 +41,9 @@ export default class CountdownPopup{
 
     get displayObject() {
         return this.sprite;
+    }
+
+    destroy() {
+        this.sprite?.destroy?.();
     }
 }
